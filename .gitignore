@@ -1,0 +1,8 @@
+UML.drawio
+images.ai
+PROPOSAL.md
+node_modules
+.DS_Store
+dist
+dist-ssr
+*.local
