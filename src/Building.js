@@ -1,7 +1,7 @@
 import {REF_SPEED, INT_ElEM_RADIUS} from './Constants.js';
 
 class Building {
-    constructor([n, m], direction){
+    constructor([n, m], [dirIn, dirOut]){
         this.queue = [];
         this.radius = INT_ElEM_RADIUS;
         this.imageSet = [0,0,0,0]
@@ -14,8 +14,7 @@ class Building {
         this.lattice = [n, m];
         this.isJammed = false;
         this.isJamPropagated = false;
-        this.dirIn = direction;
-        this.dirOut = direction;
+        this.dir =[dirIn, dirOut];
         this.workSpeed =  REF_SPEED;
         this.tranparent = false;
     }

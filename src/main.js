@@ -7,7 +7,11 @@ import { Building } from './Building.js';
 // Globals
 let field;
 let canErase = 1;
+let canEdit = 1;
 let Buildingtype;
+
+let tempLattice;
+
 
 function setup() {
   createCanvas(CANVAS_WIDTH,CANVAS_HEIGHT);
@@ -22,12 +26,17 @@ function draw() {
 
 
 function mousePressed() {
-  let [n, m] = field.clickedLattice(mouseX, mouseY);
-  if (canErase){
-    let newBuilding = new Building([n, m], 'up')
-    field.insertBuilding(newBuilding.lattice,  newBuilding); 
+  if (canEdit){
+    let [n, m] = field.clickedLattice(mouseX, mouseY);
+    if (canErase){
+      //Add building
+      let newBuilding = new Building([n, m], ['up', 'up'])
+      field.insertBuilding(newBuilding.lattice,  newBuilding); 
+    }
+    else {field.insertBuilding([n, m],  0);}
+    tempLattice = [n, m];
   }
-  else {field.insertBuilding([n, m],  0);}
+  
 }
 
 
@@ -38,9 +47,17 @@ function mouseWheel(event) {
 
 function mouseDragged(event) {
   //console.log([event.movementX, event.movementY]);
-  field.drag(event.movementX, event.movementY);
+  if (canEdit){} 
+  else {field.drag(event.movementX, event.movementY);}
 }
 
+
+
+window.addEventListener('keydown', (event) => {
+  const key = event.key
+  if (key === ' ' ) {canEdit = false}
+  else{canEdit = true};
+})
 
 
 // Spacebar to reload
@@ -49,7 +66,9 @@ function keyPressed() {
     console.log("editability changed")
     canErase = !canErase;
   }
+
 }
+
 
 // init field. subscribe & unsubscribe
 function init() {
@@ -60,5 +79,6 @@ window.setup = setup;
 window.draw = draw;
 window.mousePressed = mousePressed;
 window.keyPressed = keyPressed;
+
 window.mouseWheel = mouseWheel;
 window.mouseDragged = mouseDragged;
