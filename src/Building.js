@@ -4,7 +4,7 @@ class Building {
     constructor([n, m], [dirIn, dirOut]){
         this.queue = [];
         this.radius = INT_ElEM_RADIUS;
-        this.imageSet = [0,0,0,0]
+        this.imageSet = undefined;
         let IMGURL = '../elem/buildings/belt_top.png'
         this.loadImg(IMGURL).then((loadImg)=>{
             this.imageSet[0] = loadImg
@@ -18,6 +18,10 @@ class Building {
         this.workSpeed =  REF_SPEED;
         this.tranparent = false;
     }
+    dirIntoDeg([[dirIn, dirOut]]){
+        //return deg, left, right
+    }
+    
     loadImg (imageURL){
         return new Promise ((resolve, reject)=>{
           try{loadImage(imageURL, (loadedImage) => {

@@ -11,6 +11,8 @@ let canEdit = 1;
 let Buildingtype;
 
 let tempLattice;
+const DIR_VEC = ['up', 'right', 'down', 'left'];
+let dir_index = 0;
 
 
 function setup() {
@@ -30,7 +32,7 @@ function mousePressed() {
     let [n, m] = field.clickedLattice(mouseX, mouseY);
     if (canErase){
       //Add building
-      let newBuilding = new Building([n, m], ['up', 'up'])
+      let newBuilding = new Building([n, m], [DIR_VEC[dir_index], DIR_VEC[dir_index]])
       field.insertBuilding(newBuilding.lattice,  newBuilding); 
     }
     else {field.insertBuilding([n, m],  0);}
@@ -47,7 +49,9 @@ function mouseWheel(event) {
 
 function mouseDragged(event) {
   //console.log([event.movementX, event.movementY]);
-  if (canEdit){} 
+  if (canEdit){
+
+  } 
   else {field.drag(event.movementX, event.movementY);}
 }
 
@@ -65,6 +69,11 @@ function keyPressed() {
   if (key === 'e' || key === 'E') {
     console.log("editability changed")
     canErase = !canErase;
+  }
+  if (key === 'r' || key === 'R') {
+    console.log("Direction changed by CW 90 degree")
+    dir_index = (dir_index<3)? (dir_index+1) : 0;
+    //console.log(dir_index);
   }
 
 }
