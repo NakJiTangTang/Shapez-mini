@@ -2,6 +2,7 @@ import {CANVAS_WIDTH,CANVAS_HEIGHT, FIELD_HEIGHT, FIELD_WIDTH, INT_ElEM_RADIUS} 
 import { Subject } from './Subject.js';
 import {Building} from './Building.js'
 
+
 class Field {
     constructor(){
         this.fieldH = FIELD_HEIGHT;
@@ -10,6 +11,7 @@ class Field {
         this.viewNum = 10;
         this.viewX=CANVAS_WIDTH/2;
         this.viewY=CANVAS_HEIGHT/2; 
+        //this.peekBuilding = new Building([0,0], 'up')
     }
     tileWidthIs(){
         return CANVAS_WIDTH / this.viewNum;
@@ -17,15 +19,25 @@ class Field {
     draw(){
         const tileWidth = this.tileWidthIs()
         this.drawGrid(tileWidth);
+
         rectMode(CENTER);
         fill(100);
         square(this.viewX, this.viewY, 2.7*tileWidth);
         noFill();
+
         for (let building of this.buildings){
             if (building){building.draw(tileWidth, this.viewX, this.viewY)}
         }
+        //this.drawPeek(tileWidth)
 
-
+    }
+    drawPeek(tileWidth){
+        this.peekBuilding.lattice = this.clickedLattice(mouseX, mouseY);
+        if(this.peekBuilding.lattice){
+            tint(255,100);
+            this.peekBuilding.draw(tileWidth, this.viewX, this.viewY);
+            tint(255,255);
+        }
     }
     drawGrid(tileWidth){
         strokeWeight(tileWidth/100);
@@ -60,6 +72,7 @@ class Field {
         for (let lat of lattice) {
             if (abs(lat)>FIELD_HEIGHT/2){return null;};
         }
+        console.log(lattice)
         return lattice;
     }
 

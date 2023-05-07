@@ -6,6 +6,8 @@ import { Building } from './Building.js';
 
 // Globals
 let field;
+let canErase = 1;
+let Buildingtype;
 
 function setup() {
   createCanvas(CANVAS_WIDTH,CANVAS_HEIGHT);
@@ -20,8 +22,14 @@ function draw() {
 
 
 function mousePressed() {
-  field.insertBuilding(field.clickedLattice(mouseX, mouseY), new Building(field.clickedLattice(mouseX, mouseY), 'up') );
+  let [n, m] = field.clickedLattice(mouseX, mouseY);
+  if (canErase){
+    let newBuilding = new Building([n, m], 'up')
+    field.insertBuilding(newBuilding.lattice,  newBuilding); 
+  }
+  else {field.insertBuilding([n, m],  0);}
 }
+
 
 
 function mouseWheel(event) {
@@ -37,8 +45,9 @@ function mouseDragged(event) {
 
 // Spacebar to reload
 function keyPressed() {
-  if (key === ' ') {
-    
+  if (key === 'e' || key === 'E') {
+    console.log("editability changed")
+    canErase = !canErase;
   }
 }
 
