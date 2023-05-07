@@ -2,6 +2,7 @@ import '../css/style.css';
 
 import { CANVAS_WIDTH,CANVAS_HEIGHT, FIELD_HEIGHT, FIELD_WIDTH, REF_SPEED } from './Constants.js';
 import { Field } from './Field.js';
+import { Building } from './Building.js';
 
 // Globals
 let field;
@@ -9,6 +10,7 @@ let field;
 function setup() {
   createCanvas(CANVAS_WIDTH,CANVAS_HEIGHT);
   field = new Field();
+  imageMode(CENTER);
 }
 
 function draw() {
@@ -16,9 +18,9 @@ function draw() {
   field.draw();
 }
 
-// Shoot
+
 function mousePressed() {
-  console.log(field.clickedLattice(mouseX, mouseY));
+  field.insertBuilding(field.clickedLattice(mouseX, mouseY), new Building(field.clickedLattice(mouseX, mouseY), 'up') );
 }
 
 
