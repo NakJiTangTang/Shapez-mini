@@ -18,8 +18,7 @@ function draw() {
 
 // Shoot
 function mousePressed() {
-  let clickMouse = [mouseX, mouseY];
-  //console.log(clickMouse);
+  console.log(field.clickedLattice(mouseX, mouseY));
 }
 
 

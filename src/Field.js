@@ -11,8 +11,11 @@ class Field {
         this.viewX=CANVAS_WIDTH/2;
         this.viewY=CANVAS_HEIGHT/2;
     }
+    tileWidthIs(){
+        return CANVAS_WIDTH / this.viewNum;
+    }
     draw(){
-        const tileWidth = CANVAS_WIDTH / this.viewNum;
+        const tileWidth = this.tileWidthIs()
         this.drawGrid(tileWidth);
 
         rectMode(CENTER);
@@ -40,6 +43,19 @@ class Field {
             }
         }
         noStroke();
+    }
+    makeLattice(point , ref){
+        let varience = (point - ref)/(this.tileWidthIs()/2);
+        let lattice= (varience>=0?1:(-1)) * floor(( floor(abs(varience)) + 1)/2);
+        if (lattice == -0) lattice = 0; 
+        return lattice;
+    }
+    clickedLattice(pointX, pointY){
+        let lattice = [this.makeLattice(pointX, this.viewX), -1 * this.makeLattice(pointY, this.viewY)]
+        for (let lat of lattice) {
+            if (abs(lat)>FIELD_HEIGHT/2){return null;};
+        }
+        return lattice;
     }
 
     magnify(scrollDir){
