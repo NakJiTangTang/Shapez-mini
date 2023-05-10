@@ -6,12 +6,10 @@ class Building {
         this.radius = INT_ElEM_RADIUS;
         this.imageSet = undefined;
         let IMGURL = '../elem/buildings/belt_top.png'
-
         this.loadImg(IMGURL).then((loadImg)=>{
-            this.imageSet[0] = loadImg
-            console.log(done);
+            this.imageSet = loadImg
           }).catch((result)=>{
-            console.log(result)
+            console.log(result) //
           })
         this.lattice = [n, m];
         this.isJammed = false;
@@ -28,14 +26,13 @@ class Building {
         return new Promise ((resolve, reject)=>{
           try{loadImage(imageURL, (loadedImage) => {
             resolve(loadedImage);});
-            
           }catch (err) {reject("No images?")}})
     }
     draw(tileWidth, viewX, viewY){
         let X = viewX + tileWidth*this.lattice[0];
         let Y = viewY - tileWidth*this.lattice[1];
-        if (this.imageSet[0]){
-            image(this.imageSet[0], X, Y, tileWidth, tileWidth);
+        if (this.imageSet){
+            image(this.imageSet, X, Y, tileWidth, tileWidth);
         }
         
     }
