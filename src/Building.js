@@ -6,8 +6,10 @@ class Building {
         this.radius = INT_ElEM_RADIUS;
         this.imageSet = undefined;
         let IMGURL = '../elem/buildings/belt_top.png'
+
         this.loadImg(IMGURL).then((loadImg)=>{
             this.imageSet[0] = loadImg
+            console.log(done);
           }).catch((result)=>{
             console.log(result)
           })
@@ -26,6 +28,7 @@ class Building {
         return new Promise ((resolve, reject)=>{
           try{loadImage(imageURL, (loadedImage) => {
             resolve(loadedImage);});
+            
           }catch (err) {reject("No images?")}})
     }
     draw(tileWidth, viewX, viewY){
