@@ -1,16 +1,12 @@
-import {REF_SPEED, INT_ElEM_RADIUS} from './Constants.js';
+import {REF_SPEED, INT_ElEM_RADIUS, DIR_VEC, DIR_LATTICE} from './Constants.js';
 
 class Building {
-    constructor([n, m], [dirIn, dirOut]){
+    constructor([n, m], [dirIn, dirOut], isInv){
         this.queue = [];
         this.radius = INT_ElEM_RADIUS;
         this.imageSet = undefined;
-        let IMGURL = '../elem/buildings/belt_top.png'
-        this.loadImg(IMGURL).then((loadImg)=>{
-            this.imageSet = loadImg
-          }).catch((result)=>{
-            console.log(result) //
-          })
+        //Placeholder
+        this.IMGURL = ""
         this.lattice = [n, m];
         this.isJammed = false;
         this.isJamPropagated = false;
@@ -18,25 +14,67 @@ class Building {
         this.workSpeed =  REF_SPEED;
         this.tranparent = false;
     }
-    dirIntoDeg([[dirIn, dirOut]]){
+    // return angle/PI in radian
+    dirDelta(){
         //return deg, left, right
+        let inAng = DIR_VEC[this.dir[0]];
+        let outAng= DIR_VEC[this.dir[1]];
+        let delta = outAng - inAng;
+        if (abs(delta)<1) return (delta);
+        //it means element will comeback
+        else if (abs(delta)==1) throw ('comeback error')
+        else return delta-2*delta/abs(delta);
     }
-    
+    settingImg (){
+      this.loadImg(this.IMGURL).then((loadImg)=>{
+        this.imageSet = loadImg
+      }).catch((result)=>{
+        console.log(result) //
+      })
+    }
     loadImg (imageURL){
+      if (imageURL){
         return new Promise ((resolve, reject)=>{
           try{loadImage(imageURL, (loadedImage) => {
             resolve(loadedImage);});
           }catch (err) {reject("No images?")}})
+      }
     }
     draw(tileWidth, viewX, viewY){
         let X = viewX + tileWidth*this.lattice[0];
         let Y = viewY - tileWidth*this.lattice[1];
         if (this.imageSet){
-            image(this.imageSet, X, Y, tileWidth, tileWidth);
+          translate(X,Y);  
+          rotate(DIR_VEC[this.dir[0]]*PI)
+          image(this.imageSet, 0, 0, tileWidth, tileWidth);
+          rotate(-DIR_VEC[this.dir[0]]*PI)
+          translate(-X,-Y);
         }
-        
     }
-
 }
 
-export { Building };
+
+
+class Belt extends Building {
+  constructor([n, m], [dirIn, dirOut]){
+    super([n, m], [dirIn, dirOut]);
+    //console.log(this.dirDelta());
+    if (!(this.dirDelta())) this.IMGURL = '../elem/buildings/belt.png';
+    else if (this.dirDelta()==0.5) this.IMGURL = '../elem/buildings/belt_right.png'
+    else if (this.dirDelta()==(-0.5)) this.IMGURL = '../elem/buildings/belt_left.png'
+    this.settingImg ();
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+export { Building , Belt};

@@ -31,6 +31,7 @@ class Field {
         //this.drawPeek(tileWidth)
 
     }
+    //Under consideration to implement
     drawPeek(tileWidth){
         this.peekBuilding.lattice = this.clickedLattice(mouseX, mouseY);
         if(this.peekBuilding.lattice){
@@ -72,15 +73,13 @@ class Field {
         for (let lat of lattice) {
             if (abs(lat)>FIELD_HEIGHT/2){return null;};
         }
-        console.log(lattice)
+        //console.log(lattice)
         return lattice;
     }
-
     magnify(scrollDir){
         if (scrollDir<0) { this.viewNum = this.viewNum*0.8; }
         else {this.viewNum = this.viewNum*1.25;}
     }
-
     drag(dragDirX, dragDirY){
         this.viewX+=dragDirX;
         this.viewY+=dragDirY;
