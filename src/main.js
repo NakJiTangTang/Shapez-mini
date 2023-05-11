@@ -3,9 +3,11 @@ import '../css/style.css';
 import { CANVAS_WIDTH,CANVAS_HEIGHT, BUILDING_MODE, DIR_VEC, FIELD_HEIGHT, FIELD_WIDTH, REF_SPEED } from './Constants.js';
 import { Field } from './Field.js';
 import { Belt} from './Building.js';
+import { Element} from './Element.js';
 
 // Globals
 let field;
+let elemtest;
 let noErase = 1;
 let canEdit = 1;
 const dirArray = ['up', 'right', 'down', 'left'];
@@ -13,13 +15,31 @@ let dirInIndex = 0;
 let buildingtype= 1;
 
 
-let tempLattice;
+//let stretchy;
+
 
 
 function setup() {
   createCanvas(CANVAS_WIDTH,CANVAS_HEIGHT);
   field = new Field();
   imageMode(CENTER);
+  /*
+  stretchy = new Sprite();
+	
+	stretchy.draw = () => {
+		fill(237, 205, 0);
+
+		push();
+		rotate(stretchy.direction);
+		ellipse(0, 0, 100 + stretchy.speed, 100 - stretchy.speed);
+		pop();
+	};
+
+	stretchy.update = () => {
+		stretchy.moveTowards(mouse, 0.07);
+	};
+  */
+ elemtest = new Element([0,0,0,0]);
 }
 
 function draw() {
