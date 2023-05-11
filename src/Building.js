@@ -1,5 +1,7 @@
 import {REF_SPEED, INT_ElEM_RADIUS, DIR_VEC, DIR_LATTICE} from './Constants.js';
 
+import { Element} from './Element.js';
+
 class Building {
     constructor([n, m], [dirIn, dirOut], isInv){
         this.queue = [];
@@ -45,9 +47,9 @@ class Building {
         let Y = viewY - tileWidth*this.lattice[1];
         if (this.imageSet){
           translate(X,Y);  
-          rotate(DIR_VEC[this.dir[0]]*PI)
+          rotate(DIR_VEC[this.dir[0]]*180)
           image(this.imageSet, 0, 0, tileWidth, tileWidth);
-          rotate(-DIR_VEC[this.dir[0]]*PI)
+          rotate(-DIR_VEC[this.dir[0]]*180)
           translate(-X,-Y);
         }
     }
@@ -57,12 +59,18 @@ class Building {
 
 class Belt extends Building {
   constructor([n, m], [dirIn, dirOut]){
+
     super([n, m], [dirIn, dirOut]);
     //console.log(this.dirDelta());
     if (!(this.dirDelta())) this.IMGURL = '../elem/buildings/belt.png';
     else if (this.dirDelta()==0.5) this.IMGURL = '../elem/buildings/belt_right.png'
     else if (this.dirDelta()==(-0.5)) this.IMGURL = '../elem/buildings/belt_left.png'
     this.settingImg ();
+    // test element (delete!)
+    //this.queue.push(new Element([0,0,0,0]));
+
+    console.log(this.queue);
+
   }
 }
 

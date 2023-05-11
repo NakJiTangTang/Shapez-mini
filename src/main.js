@@ -23,23 +23,6 @@ function setup() {
   createCanvas(CANVAS_WIDTH,CANVAS_HEIGHT);
   field = new Field();
   imageMode(CENTER);
-  /*
-  stretchy = new Sprite();
-	
-	stretchy.draw = () => {
-		fill(237, 205, 0);
-
-		push();
-		rotate(stretchy.direction);
-		ellipse(0, 0, 100 + stretchy.speed, 100 - stretchy.speed);
-		pop();
-	};
-
-	stretchy.update = () => {
-		stretchy.moveTowards(mouse, 0.07);
-	};
-  */
- elemtest = new Element([0,0,0,0]);
 }
 
 function draw() {
@@ -53,6 +36,7 @@ function mouseWheel(event) {
 }
 
 
+let tempLattice
 let dirOut
 let dirIn
 function mousePressed() {
