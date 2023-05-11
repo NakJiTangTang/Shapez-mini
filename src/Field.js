@@ -1,4 +1,4 @@
-import {CANVAS_WIDTH,CANVAS_HEIGHT, FIELD_HEIGHT, FIELD_WIDTH, INT_ElEM_RADIUS} from './Constants.js';
+import {CANVAS_WIDTH,CANVAS_HEIGHT, FIELD_HEIGHT, FIELD_WIDTH, ElEM_RADIUS_INT} from './Constants.js';
 import { Subject } from './Subject.js';
 import {Building} from './Building.js'
 
@@ -20,14 +20,17 @@ class Field {
         const tileWidth = this.tileWidthIs()
         this.drawGrid(tileWidth);
 
+        translate(this.viewX, this.viewY);
         rectMode(CENTER);
         fill(100);
-        square(this.viewX, this.viewY, 2.7*tileWidth);
+        square(0, 0, 2.7*tileWidth);
         noFill();
-
         for (let building of this.buildings){
-            if (building){building.draw(tileWidth, this.viewX, this.viewY)}
+            if (building){building.draw()}
         }
+
+        translate(-this.viewX, -this.viewY);
+
         //this.drawPeek(tileWidth)
 
     }
@@ -79,6 +82,11 @@ class Field {
     magnify(scrollDir){
         if (scrollDir<0) { this.viewNum = this.viewNum*0.8; }
         else {this.viewNum = this.viewNum*1.25;}
+        for (let building of this.buildings){
+            if (building){
+                building.changeTileWidth(this.tileWidthIs());
+            }
+        }
     }
     drag(dragDirX, dragDirY){
         this.viewX+=dragDirX;
@@ -87,6 +95,7 @@ class Field {
     nmIntoIndex([n, m]){return FIELD_WIDTH*((FIELD_HEIGHT-1)/2-m) + (n+(FIELD_WIDTH-1)/2);}
     indexIntoNM(index){return [(index%FIELD_WIDTH) - (FIELD_WIDTH-1)/2 , -1*floor(index/FIELD_WIDTH) + (FIELD_HEIGHT-1)/2]}
     insertBuilding([n, m], building){
+        building.changeTileWidth(this.tileWidthIs()) ;
         this.buildings[this.nmIntoIndex([n,m])] = building;
     }
 

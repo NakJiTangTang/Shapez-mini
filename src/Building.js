@@ -1,11 +1,11 @@
-import {REF_SPEED, INT_ElEM_RADIUS, DIR_VEC, DIR_LATTICE} from './Constants.js';
+import {REF_SPEED, ElEM_RADIUS_INT, DIR_VEC, DIR_LATTICE} from './Constants.js';
 
 import { Element} from './Element.js';
 
 class Building {
     constructor([n, m], [dirIn, dirOut], isInv){
         this.queue = [];
-        this.radius = INT_ElEM_RADIUS;
+        this.radius = ElEM_RADIUS_INT;
         this.imageSet = undefined;
         //Placeholder
         this.IMGURL = ""
@@ -15,6 +15,7 @@ class Building {
         this.dir =[dirIn, dirOut];
         this.workSpeed =  REF_SPEED;
         this.tranparent = false;
+        this.tileWidth = 0;
     }
     // return angle/PI in radian
     dirDelta(){
@@ -42,16 +43,24 @@ class Building {
           }catch (err) {reject("No images?")}})
       }
     }
-    draw(tileWidth, viewX, viewY){
-        let X = viewX + tileWidth*this.lattice[0];
-        let Y = viewY - tileWidth*this.lattice[1];
+    changeTileWidth(newTileWidth){
+      this.tileWidth = newTileWidth;
+      for (let element of this.queue){
+        console.log(element.tileWidth);
+        element.tileWidth = this.tileWidth;
+      }
+    }
+    draw(){
+        let X = this.tileWidth*this.lattice[0];
+        let Y = -this.tileWidth*this.lattice[1];
         if (this.imageSet){
           translate(X,Y);  
           rotate(DIR_VEC[this.dir[0]]*180)
-          image(this.imageSet, 0, 0, tileWidth, tileWidth);
+          image(this.imageSet, 0, 0, this.tileWidth, this.tileWidth);
           rotate(-DIR_VEC[this.dir[0]]*180)
           translate(-X,-Y);
         }
+
     }
 }
 
@@ -67,7 +76,11 @@ class Belt extends Building {
     else if (this.dirDelta()==(-0.5)) this.IMGURL = '../elem/buildings/belt_left.png'
     this.settingImg ();
     // test element (delete!)
-    //this.queue.push(new Element([0,0,0,0]));
+    let exElement = new Element([n, m], [0,0,0,0])
+    exElement.movingPercent=50;
+    this.queue.push(exElement);
+
+
 
     console.log(this.queue);
 
