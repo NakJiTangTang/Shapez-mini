@@ -76,9 +76,7 @@ class Belt extends Building {
     else if (this.dirDelta()==(-0.5)) this.IMGURL = '../elem/buildings/belt_left.png'
     this.settingImg ();
     // test element (delete!)
-    let exElement = new Element([n, m], [0,0,0,0])
-    exElement.movingPercent=50;
-    this.queue.push(exElement);
+    this.queue.push(new Element([n, m], [0,0,0,0]));
 
 
 

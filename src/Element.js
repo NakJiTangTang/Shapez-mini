@@ -15,8 +15,14 @@ class Element{
         this.sprite.draw = () => {
             fill(237, 205, 0);
             push();
-            ellipse(this.inRef[0]+this.inWhere[0]*this.tileWidth, this.inRef[1]-this.inWhere[1]*this.tileWidth, 
-                this.tileWidth*ElEM_RADIUS_INT, this.tileWidth*ElEM_RADIUS_INT);
+            let X = this.inRef[0]+this.inWhere[0]*this.tileWidth
+            let Y = this.inRef[1]-this.inWhere[1]*this.tileWidth
+            let R = this.tileWidth*ElEM_RADIUS_INT;
+            this.sprite.x = X;
+            this.sprite.y = Y;
+
+            ellipse(X, Y, R, R);
+                console.log([X,Y]);
             pop();
         };
 
