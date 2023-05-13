@@ -101,6 +101,13 @@ class Field {
         building.changeTileWidth(this.tileWidthIs()) ;
         this.buildings[this.nmIntoIndex([n,m])] = building;
     }
+    deleteBuilding([n, m]){
+        if (this.buildings[this.nmIntoIndex([n,m])]){
+            this.buildings[this.nmIntoIndex([n,m])].delElem();
+        };
+        
+        this.buildings[this.nmIntoIndex([n,m])]=0;
+    }
 
 }
 

@@ -21,7 +21,6 @@ class Element{
             this.sprite.pos ={x:0, y:0};
             ellipseMode(CENTER);
             ellipse(X, Y, 2*R, 2*R);
-                console.log([X,Y]);
             pop();
         };
 

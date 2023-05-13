@@ -50,7 +50,7 @@ function mousePressed() {
       let newBuilding = new Belt([n, m], [dirArray[dirInIndex], dirArray[dirInIndex]])
       field.insertBuilding(newBuilding.lattice,  newBuilding); 
     }
-    else {field.insertBuilding([n, m],  0);}
+    else {field.deleteBuilding([n, m]);}
     tempLattice = [n, m];
   }
   dirIn = dirArray[dirInIndex];
@@ -63,11 +63,13 @@ function mouseDragged(event) {
   if (canEdit){
     let nowLattice = field.clickedLattice(mouseX, mouseY)
     let diffLattice = [nowLattice[0]-tempLattice[0], nowLattice[1]-tempLattice[1]]
+    
     if (buildingtype=BUILDING_MODE['belt']){
       if (abs(diffLattice[0])+abs(diffLattice[1])) {
         if (abs(diffLattice[0])) (diffLattice[0]>0)?(dirOut='right'):(dirOut='left');
         else if (abs(diffLattice[1])) (diffLattice[1]>0)?(dirOut='up'):(dirOut='down');
         let newBuilding;
+        field.deleteBuilding(tempLattice);
         try{
           newBuilding = new Belt(tempLattice, [dirIn, dirOut])
           field.insertBuilding(tempLattice,  newBuilding); 

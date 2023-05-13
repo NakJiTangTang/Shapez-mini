@@ -43,6 +43,11 @@ class Building {
           }catch (err) {reject("No images?")}})
       }
     }
+    delElem(){
+      for (let element of this.queue){
+        element.sprite.remove();
+      }
+    }
     changeTileWidth(newTileWidth){
       this.tileWidth = newTileWidth;
       for (let element of this.queue){
