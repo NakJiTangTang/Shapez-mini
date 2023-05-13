@@ -1,10 +1,11 @@
-import {CANVAS_WIDTH,CANVAS_HEIGHT, FIELD_HEIGHT, FIELD_WIDTH, ElEM_RADIUS_INT} from './Constants.js';
+import {MIN_DIST, CANVAS_WIDTH,CANVAS_HEIGHT, FIELD_HEIGHT, FIELD_WIDTH, ElEM_RADIUS_INT} from './Constants.js';
 import { Subject } from './Subject.js';
 import {Building} from './Building.js'
 
 
-class Field {
+class Field extends Subject{
     constructor(){
+        super()
         this.fieldH = FIELD_HEIGHT;
         this.fieldW = FIELD_WIDTH;
         this.buildings = new Array(this.fieldH*this.fieldW);
@@ -29,6 +30,11 @@ class Field {
             if (building){
                 building.draw()
                 building.dragWithElement(this.viewX, this.viewY);
+            }
+        }
+        for (let building of this.buildings){ 
+            if (building){
+                building.emitElem();
             }
         }
         translate(-this.viewX, -this.viewY);
@@ -97,15 +103,42 @@ class Field {
     insertBuilding([n, m], building){
         building.changeTileWidth(this.tileWidthIs()) ;
         this.buildings[this.nmIntoIndex([n,m])] = building;
+        this.subscribe(this.buildings[this.nmIntoIndex([n,m])]);
+        this.buildings[this.nmIntoIndex([n,m])].subscribe(this);
+        for (let building of this.buildings){
+            if (building){building.movingElem()}
+        }
+
     }
     deleteBuilding([n, m]){
         if (this.buildings[this.nmIntoIndex([n,m])]){
-            this.buildings[this.nmIntoIndex([n,m])].delElem();
+            this.buildings[this.nmIntoIndex([n,m])].delElemAll();
+            this.unsubscribe(this.buildings[this.nmIntoIndex([n,m])]);
+            this.buildings[this.nmIntoIndex([n,m])].unsubscribeAll();
         };
-        
         this.buildings[this.nmIntoIndex([n,m])]=0;
     }
-
+    update(source, ...others){
+        if (source == 'CheckNext'){
+            // others: [next lattice, previous dirOut, now lattice]
+            let buildingToSee = this.buildings[this.nmIntoIndex(others[0])]
+            if (buildingToSee){
+                if(buildingToSee.dir[0]==others[1]){
+                    //let sol = !buildingToSee.isJammed;
+                    let sol = ((buildingToSee.queue[0])?buildingToSee.queue[0].movingPercent:100 )
+                    console.log(sol)
+                    this.notifySubscribers('IsNotJam', sol>MIN_DIST, others[0], others[2]);
+                }
+                else{this.notifySubscribers('IsNotJam', false, others[0], others[2])}
+            }
+            else{this.notifySubscribers('IsNotJam', false, others[0], others[2])}
+        }
+        if (source == 'ElemTransferStart'){
+            // others: [element, new [n, m]]
+            console.log(others);
+            this.buildings[this.nmIntoIndex(others[1])].newElem(others[0]);
+        }
+    }
 }
 
 export {Field};

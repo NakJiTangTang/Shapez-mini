@@ -37,7 +37,6 @@ function mouseWheel(event) {
 }
 
 function isInCanvas(mX, mY){
-  console.log(mX);
   if (mX>=0 && mX<=width){
     if (mY>=0 && mY<=height){return true};
   }
@@ -53,7 +52,7 @@ function mousePressed() {
       //Add building
 
       //basic direction (starting point)
-      console.log(dirArray[dirInIndex]);
+      //console.log(dirArray[dirInIndex]);
       let newBuilding = new Belt([n, m], [dirArray[dirInIndex], dirArray[dirInIndex]])
       field.insertBuilding(newBuilding.lattice,  newBuilding); 
     }
