@@ -73,7 +73,7 @@ function vectorSum([a, b], [c, d]) {return [a+c, b+d]};
 
 function mouseDragged(event) {
   //console.log([event.movementX, event.movementY]);
-  if (canEdit &&noErase && isInCanvas(mouseX, mouseY)){
+  if (canEdit && noErase && isInCanvas(mouseX, mouseY)){
     let nowLattice = field.clickedLattice(mouseX, mouseY)
     let diffLattice = [nowLattice[0]-tempLattice[0], nowLattice[1]-tempLattice[1]]
     
@@ -102,7 +102,13 @@ function mouseDragged(event) {
 
       }
     }
-  } 
+  }
+  else if(canEdit && isInCanvas(mouseX, mouseY)) {
+    let nowLattice = field.clickedLattice(mouseX, mouseY)
+    field.deleteBuilding(tempLattice);
+    field.deleteBuilding(nowLattice);
+    tempLattice=nowLattice;
+  }
   else {field.drag(event.movementX, event.movementY);}
 }
 
