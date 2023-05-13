@@ -1,7 +1,7 @@
 import {MIN_DIST, CANVAS_WIDTH,CANVAS_HEIGHT, FIELD_HEIGHT, FIELD_WIDTH, ElEM_RADIUS_INT} from './Constants.js';
 import { Subject } from './Subject.js';
 import {Building, Ore} from './Building.js'
-
+import list from './OreList.json'
 
 class Field extends Subject{
     constructor(){
@@ -14,9 +14,26 @@ class Field extends Subject{
         this.viewY=CANVAS_HEIGHT/2; 
         this.Orelist = new Array(this.fieldH*this.fieldW);
         this.Ores = new Array(this.fieldH*this.fieldW);
+        this.loadOreList();
         //this.peekBuilding = new Building([0,0], 'up')
     }
     
+    saveOreList(){
+        save(this.Orelist, "OreList.json");
+        //localStorage.setItem("OreList", JSON.stringify(this.Orelist));
+    }
+    loadOreList(){
+        //const data = localStorage.getItem("OreList");
+        this.Orelist=list;
+        if(this.Orelist){
+            //this.Orelist = JSON.parse(data);
+            for (let i=0;i<this.Orelist.length;i++){ 
+                if (this.Orelist[i]){
+                    this.insertOre(this.indexIntoNM(i), this.Orelist[i])}
+            }
+        }
+    }
+    initOreList(){this.Orelist = new Array(this.fieldH*this.fieldW);}
     
     tileWidthIs(){
         return CANVAS_WIDTH / this.viewNum;
@@ -127,6 +144,7 @@ class Field extends Subject{
         }
     }
     insertOre([n, m], ore){
+        this.Orelist[this.nmIntoIndex([n, m])]=ore;
         this.Ores[this.nmIntoIndex([n, m])]=new Ore([n, m], ore)
         this.Ores[this.nmIntoIndex([n, m])].changeTileWidth(this.tileWidthIs()) ;
         this.subscribe(this.Ores[this.nmIntoIndex([n,m])]);

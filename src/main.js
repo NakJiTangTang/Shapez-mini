@@ -46,7 +46,7 @@ let tempLattice
 let dirOut
 let dirIn
 //Ore test
-let oreIndex = 0;
+//let oreIndex = 0;
 function mousePressed() {
   if (canEdit && isInCanvas(mouseX, mouseY)){
     let [n, m] = field.clickedLattice(mouseX, mouseY);
@@ -60,9 +60,9 @@ function mousePressed() {
     }
     else {
       field.deleteBuilding([n, m]);
-      //For test Ore field
+      //For Ore test
       //Each ore will be: C, R, W, S, r, g, b
-      field.insertOre([n, m], ['C', 'R', 'W', 'S', 'r', 'g', 'b'][oreIndex])
+      //field.insertOre([n, m], ['C', 'R', 'W', 'S', 'r', 'g', 'b'][oreIndex])
     }
     tempLattice = [n, m];
   }
@@ -144,10 +144,16 @@ function keyPressed() {
     buildingtype=BUILDING_MODE['belt'];
   }
   //Ore test
+  /*
   if (key === ']') {
     (oreIndex<6)?(oreIndex += 1):(oreIndex=0);
     console.log(`Ore placing ${['C', 'R', 'W', 'S', 'r', 'g', 'b'][oreIndex]}`);
   }
+  if (key === '=') {
+    field.saveOreList()
+    console.log(`Saving OreList`);
+  }
+  */
 }
 
 
