@@ -68,15 +68,15 @@ class Building extends Subject{
       if (this.queue.length){
         for (let i=0;i<this.queue.length-1; i++){
           if(this.queue[i+1].movingPercent-this.queue[i].movingPercent>MIN_DIST){
-            this.queue[i].sprite.move();
+            this.queue[i].move();
           }
         }
-        this.queue[this.queue.length-1].sprite.move();
+        this.queue[this.queue.length-1].move();
       }
     }
     emitElem(){
       if (this.queue.length){
-        this.queue[this.queue.length-1].sprite.emit()
+        this.queue[this.queue.length-1].emit()
         
       }
     }
