@@ -50,9 +50,9 @@ function mousePressed() {
     let [n, m] = field.clickedLattice(mouseX, mouseY);
     if (noErase){
       //Add building
-
       //basic direction (starting point)
       //console.log(dirArray[dirInIndex]);
+      field.deleteBuilding([n, m]);
       let newBuilding = new Belt([n, m], [dirArray[dirInIndex], dirArray[dirInIndex]])
       field.insertBuilding(newBuilding.lattice,  newBuilding); 
     }
