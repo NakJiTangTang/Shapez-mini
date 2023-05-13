@@ -3,6 +3,8 @@ import {MIN_DIST, REF_SPEED, ElEM_RADIUS_INT, DIR_VEC, DIR_LATTICE} from './Cons
 import { Subject} from './Subject.js';
 
 import { Element} from './Element.js';
+import { Shape} from './Shape.js';
+
 
 class Building extends Subject{
     constructor([n, m], [dirIn, dirOut], isInv){
@@ -134,8 +136,10 @@ class Belt extends Building {
     else if (this.dirDelta()==(-0.5)) this.IMGURL = '../elem/buildings/belt_left.png'
     this.settingImg ();
     
+
     // test element (delete!)
-    this.queue.push(new Element([n, m], [0,0,0,0], this.dir));
+    let layer1 = new Shape(['C', 'C', 'C', 'C'], ['u','r','g','b'])
+    this.queue.push(new Element([n, m], [layer1,0,0,0], this.dir));
     this.queue[0].subscribe (this)
 
 

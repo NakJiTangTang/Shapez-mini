@@ -1,11 +1,11 @@
 import {Shape} from './Shape.js'
-import {FRAME_RATE, REF_SPEED, DIR_LATTICE, ElEM_RADIUS_INT, ElEM_RADIUS_RATIO} from './Constants.js'
+import {COLOR_PALET, FRAME_RATE, REF_SPEED, DIR_LATTICE, ElEM_RADIUS_INT, ElEM_RADIUS_RATIO} from './Constants.js'
 import { Subject} from './Subject.js';
 
 class Element extends Subject{
-    constructor([n, m], [top, up, down, bot], [dirIn, dirOut]){
+    constructor([n, m], [bot, down, up, top], [dirIn, dirOut]){
         super();
-        this.layers = [top, up, down, bot];
+        this.layers = [bot, down, up, top];
         this.sprite = new Sprite(0, 0, ElEM_RADIUS_INT, ElEM_RADIUS_INT, 'static');
         this.tileWidth =0;
         this.movingPercent=0;
@@ -19,16 +19,26 @@ class Element extends Subject{
             this.positionSet();
             if(this.visible){
                 let R= this.tileWidth*ElEM_RADIUS_INT;
-
-                fill(237, 205, 0);
-                //push();
-                
-                strokeWeight(6);
+                push();
+                strokeWeight(this.tileWidth/30);
                 stroke(100);
+                for (let layer of this.layers){
+                    if(layer){for (let i=0; i<4; i++){
+                        fill(COLOR_PALET[layer.color[i]]);
+                        rotate(i*90);
+                        if (layer.shape[i]=='C'){
+                            arc(0, 0, 2*R, 2*R, -90, 0, PIE)
+                        }
+                        
+                        rotate(-i*90);
+                    }}
+                }
+
+                
                 ellipseMode(CENTER);
-                //arc(0, 0, 2*R, 2*R, 0, 90, PIE)
-                ellipse(0, 0, 2*R, 2*R);
-                //pop();
+                //
+                //ellipse(0, 0, 2*R, 2*R);
+                pop();
                 //console.log(this.movingPercent);
             }
         };
