@@ -92,8 +92,6 @@ class Building extends Subject{
           rotate(-DIR_VEC[this.dir[0]]*180)
           translate(-X,-Y);
         }
-        //if (!(this.isJammed)){ this.movingElem() }
-        console.log(this.queue);
         this.movingElem()
     }
     newElem(newElement){
@@ -105,13 +103,11 @@ class Building extends Subject{
     update(source, ...others){
       if (source == 'ElemReady'){
         // others: []
-        console.log('asfd')
         this.notifySubscribers('CheckNext', this.nextLattice, this.dir[1], this.lattice);
       }
       if (source == 'IsNotJam' && others[2].toString()==this.lattice.toString()){
         // others: [bool, new [n, m], now [n, m]]
         if (this.nextLattice.toString()==others[1].toString()){
-          //console.log(others[0]);
           if (others[0]){
             this.isJammed = false;
             this.notifySubscribers('ElemTransferStart', this.queue.pop(), others[1]);

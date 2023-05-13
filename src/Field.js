@@ -126,7 +126,6 @@ class Field extends Subject{
                 if(buildingToSee.dir[0]==others[1]){
                     //let sol = !buildingToSee.isJammed;
                     let sol = ((buildingToSee.queue[0])?buildingToSee.queue[0].movingPercent:100 )
-                    console.log(sol)
                     this.notifySubscribers('IsNotJam', sol>MIN_DIST, others[0], others[2]);
                 }
                 else{this.notifySubscribers('IsNotJam', false, others[0], others[2])}
@@ -135,7 +134,7 @@ class Field extends Subject{
         }
         if (source == 'ElemTransferStart'){
             // others: [element, new [n, m]]
-            console.log(others);
+            //console.log(others);
             this.buildings[this.nmIntoIndex(others[1])].newElem(others[0]);
         }
     }
