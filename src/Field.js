@@ -25,8 +25,11 @@ class Field {
         fill(100);
         square(0, 0, 2.7*tileWidth);
         noFill();
-        for (let building of this.buildings){
-            if (building){building.draw()}
+        for (let building of this.buildings){ 
+            if (building){
+                building.draw()
+                building.dragWithElement(this.viewX, this.viewY);
+            }
         }
 
         translate(-this.viewX, -this.viewY);

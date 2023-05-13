@@ -46,8 +46,12 @@ class Building {
     changeTileWidth(newTileWidth){
       this.tileWidth = newTileWidth;
       for (let element of this.queue){
-        console.log(element.tileWidth);
         element.tileWidth = this.tileWidth;
+      }
+    }
+    dragWithElement(refX, refY){
+      for (let element of this.queue){
+        element.inRef = [refX, refY];
       }
     }
     draw(){
