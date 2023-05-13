@@ -3,6 +3,7 @@ import '../css/style.css';
 import { FRAME_RATE, CANVAS_WIDTH,CANVAS_HEIGHT, BUILDING_MODE, DIR_VEC, FIELD_HEIGHT, FIELD_WIDTH, REF_SPEED } from './Constants.js';
 import { Field } from './Field.js';
 import { Belt} from './Building.js';
+import { Miner} from './Etcbuilding.js';
 import { Element} from './Element.js';
 
 // Globals
@@ -12,7 +13,7 @@ let noErase = 1;
 let canEdit = 1;
 const dirArray = ['up', 'right', 'down', 'left'];
 let dirInIndex = 0;
-let buildingtype= 1;
+let buildingtype = 1;
 
 
 //let stretchy;
@@ -48,6 +49,7 @@ let dirIn
 //Ore test
 //let oreIndex = 0;
 function mousePressed() {
+  let newBuilding;
   if (canEdit && isInCanvas(mouseX, mouseY)){
     let [n, m] = field.clickedLattice(mouseX, mouseY);
     if (noErase){
@@ -55,7 +57,14 @@ function mousePressed() {
       //basic direction (starting point)
       //console.log(dirArray[dirInIndex]);
       field.deleteBuilding([n, m]);
-      let newBuilding = new Belt([n, m], [dirArray[dirInIndex], dirArray[dirInIndex]])
+      let dirIn = dirArray[dirInIndex];
+      if (buildingtype==BUILDING_MODE['belt']){
+        newBuilding = new Belt([n, m], [dirIn, dirIn])
+      }
+      else if (buildingtype==BUILDING_MODE['miner']){
+        //console.log('asdf')
+        newBuilding = new Miner([n, m], [dirIn, dirIn], field.Ores[field.nmIntoIndex([n, m])])
+      }
       field.insertBuilding(newBuilding.lattice,  newBuilding); 
     }
     else {
@@ -76,12 +85,13 @@ function mouseDragged(event) {
   if (canEdit && noErase && isInCanvas(mouseX, mouseY)){
     let nowLattice = field.clickedLattice(mouseX, mouseY)
     let diffLattice = [nowLattice[0]-tempLattice[0], nowLattice[1]-tempLattice[1]]
-    
-    if (buildingtype=BUILDING_MODE['belt']){
+    let newBuilding;
+
+    if (buildingtype==BUILDING_MODE['belt']){
       if (abs(diffLattice[0])+abs(diffLattice[1])) {
         if (abs(diffLattice[0])) (diffLattice[0]>0)?(dirOut='right'):(dirOut='left');
         else if (abs(diffLattice[1])) (diffLattice[1]>0)?(dirOut='up'):(dirOut='down');
-        let newBuilding;
+        
         field.deleteBuilding(tempLattice);
         field.deleteBuilding(nowLattice);
         try{
@@ -90,7 +100,6 @@ function mouseDragged(event) {
         }catch(event){
           if(event=='comeback error'){
             dirIn=dirOut;
-            console.log('asdfsdf')
             newBuilding = new Belt(tempLattice, [dirOut, dirOut])
             field.insertBuilding(tempLattice,  newBuilding); 
           };
@@ -102,6 +111,8 @@ function mouseDragged(event) {
 
       }
     }
+    
+
   }
   else if(canEdit && isInCanvas(mouseX, mouseY)) {
     let nowLattice = field.clickedLattice(mouseX, mouseY)
@@ -142,6 +153,11 @@ function keyPressed() {
   if (key === '1' || key === 'b'|| key === 'B') {
     console.log("Building mode: Belt");
     buildingtype=BUILDING_MODE['belt'];
+  }
+  if (key === '2') {
+    console.log("Building mode: Miner");
+    buildingtype=BUILDING_MODE['miner'];
+    //console.log(buildingtype);
   }
   //Ore test
   /*

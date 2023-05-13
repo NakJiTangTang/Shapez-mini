@@ -97,7 +97,8 @@ class Building extends Subject{
     }
     newElem(newElement){
       this.queue.unshift(newElement);
-      this.queue[0].init(this.lattice, this.dir);
+      this.queue[0].init(this.lattice, this.dir, this.tileWidth);
+      this.queue[0].visibleChanger(false)
       newElement.subscribe(this);
     }
 
@@ -135,13 +136,18 @@ class Belt extends Building {
     else if (this.dirDelta()==(-0.5)) this.IMGURL = '../elem/buildings/belt_left.png'
     this.settingImg ();
     
-
     // test element (delete!)
-    let layer1 = new Shape(['S', 'S', 'S', 'S'], ['u','y','p','w'])
-    this.queue.push(new Element([n, m], [layer1,0,0,0], this.dir));
-    this.queue[0].subscribe (this)
-    console.log(this.queue);
+    //let layer1 = new Shape(['S', 'S', 'S', 'S'], ['u','y','p','w'])
+    //this.queue.push(new Element([n, m], [layer1,0,0,0], this.dir));
+    //this.queue[0].subscribe (this)
+    //console.log(this.queue);
 
+  }
+  newElem(newElement){
+    this.queue.unshift(newElement);
+    this.queue[0].init(this.lattice, this.dir, this.tileWidth);
+    this.queue[0].visibleChanger(true)
+    newElement.subscribe(this);
   }
 }
 
@@ -151,11 +157,11 @@ class Ore extends Building {
     super([n, m], ['up', 'up']);
     this.ore = ore;
     if (['C', 'R', 'W', 'S'].includes(ore)){
-      let layer = new Shape([ore,ore,ore,ore], ['u','u','u','u']);
-      this.queue.push(new Element([n, m], [layer,0,0,0], this.dir));
+      this.layer = new Shape([ore,ore,ore,ore], ['u','u','u','u']);
+      this.queue.push(new Element([n, m], [this.layer,0,0,0], this.dir));
     }else if (['r', 'g', 'b'].includes(ore)){
-      let layer = new Shape(['Col','Col','Col','Col'], [ore,ore,ore,ore]);
-      this.queue.push(new Element([n, m], [layer,0,0,0], this.dir));
+      this.layer = new Shape(['Col','Col','Col','Col'], [ore,ore,ore,ore]);
+      this.queue.push(new Element([n, m], [this.layer,0,0,0], this.dir));
     }
     this.queue[0].movingPercent=50;
     this.queue[0].subscribe (this)
@@ -166,15 +172,5 @@ class Ore extends Building {
     if (source == 'ElemReady'){  }
     if (source == 'IsNotJam' && others[2].toString()==this.lattice.toString()){  }}
 }
-
-
-
-
-
-
-
-
-
-
 
 export { Building , Belt, Ore};

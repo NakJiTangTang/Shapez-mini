@@ -47,7 +47,11 @@ class Field extends Subject{
         for (let i=0;i<this.Ores.length;i++){ 
             if (this.Ores[i]){
                 this.Ores[i].dragWithElement(this.viewX, this.viewY);
-                if (this.buildings[i]){this.Ores[i].queue[0].visibleChanger(false);
+                if (this.buildings[i]){
+                    if(this.buildings[i].layer){
+                        this.Ores[i].queue[0].visibleChanger(true);
+                    }
+                    else{this.Ores[i].queue[0].visibleChanger(false);}
                 }else {this.Ores[i].queue[0].visibleChanger(true);}
             }
         }

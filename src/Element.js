@@ -99,10 +99,11 @@ class Element extends Subject{
     
     visibleChanger(toVisible){this.visible = toVisible};
     
-    init([n, m], [dirIn, dirOut]){
+    init([n, m], [dirIn, dirOut], tileWidth){
         this.inWhere = [n, m];
         this.buildingDir = [dirIn, dirOut];
         this.movingPercent=0;
+        this.tileWidth =tileWidth
         this.unsubscribeAll();
     }
     emit = ()=>{
