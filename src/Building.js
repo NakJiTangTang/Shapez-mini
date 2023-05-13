@@ -83,7 +83,6 @@ class Building extends Subject{
       }
     }
 
-
     draw(){
         let X = this.tileWidth*this.lattice[0];
         let Y = -this.tileWidth*this.lattice[1];
@@ -141,12 +140,31 @@ class Belt extends Building {
     let layer1 = new Shape(['S', 'S', 'S', 'S'], ['u','y','p','w'])
     this.queue.push(new Element([n, m], [layer1,0,0,0], this.dir));
     this.queue[0].subscribe (this)
-
-
-
     console.log(this.queue);
 
   }
+}
+
+class Ore extends Building {
+  constructor([n, m], ore){
+    //Each ore will be: C, R, W, S, r, g, b
+    super([n, m], ['up', 'up']);
+    this.ore = ore;
+    if (['C', 'R', 'W', 'S'].includes(ore)){
+      let layer = new Shape([ore,ore,ore,ore], ['u','u','u','u']);
+      this.queue.push(new Element([n, m], [layer,0,0,0], this.dir));
+    }else if (['r', 'g', 'b'].includes(ore)){
+      let layer = new Shape(['Col','Col','Col','Col'], [ore,ore,ore,ore]);
+      this.queue.push(new Element([n, m], [layer,0,0,0], this.dir));
+    }
+    this.queue[0].movingPercent=50;
+    this.queue[0].subscribe (this)
+  }
+  movingElem(){}
+  settingImg(){};
+  update(source, ...others){
+    if (source == 'ElemReady'){  }
+    if (source == 'IsNotJam' && others[2].toString()==this.lattice.toString()){  }}
 }
 
 
@@ -159,5 +177,4 @@ class Belt extends Building {
 
 
 
-
-export { Building , Belt};
+export { Building , Belt, Ore};

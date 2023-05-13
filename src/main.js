@@ -45,6 +45,8 @@ function isInCanvas(mX, mY){
 let tempLattice
 let dirOut
 let dirIn
+//Ore test
+let oreIndex = 0;
 function mousePressed() {
   if (canEdit && isInCanvas(mouseX, mouseY)){
     let [n, m] = field.clickedLattice(mouseX, mouseY);
@@ -56,7 +58,12 @@ function mousePressed() {
       let newBuilding = new Belt([n, m], [dirArray[dirInIndex], dirArray[dirInIndex]])
       field.insertBuilding(newBuilding.lattice,  newBuilding); 
     }
-    else {field.deleteBuilding([n, m]);}
+    else {
+      field.deleteBuilding([n, m]);
+      //For test Ore field
+      //Each ore will be: C, R, W, S, r, g, b
+      field.insertOre([n, m], ['C', 'R', 'W', 'S', 'r', 'g', 'b'][oreIndex])
+    }
     tempLattice = [n, m];
   }
   dirIn = dirArray[dirInIndex];
@@ -66,7 +73,7 @@ function vectorSum([a, b], [c, d]) {return [a+c, b+d]};
 
 function mouseDragged(event) {
   //console.log([event.movementX, event.movementY]);
-  if (canEdit && isInCanvas(mouseX, mouseY)){
+  if (canEdit &&noErase && isInCanvas(mouseX, mouseY)){
     let nowLattice = field.clickedLattice(mouseX, mouseY)
     let diffLattice = [nowLattice[0]-tempLattice[0], nowLattice[1]-tempLattice[1]]
     
@@ -112,6 +119,7 @@ window.addEventListener('keyup', (event) => {
 })
 
 // Spacebar to reload
+
 function keyPressed() {
   if (key === ' ') {
     canEdit = false; 
@@ -129,7 +137,11 @@ function keyPressed() {
     console.log("Building mode: Belt");
     buildingtype=BUILDING_MODE['belt'];
   }
-
+  //Ore test
+  if (key === ']') {
+    (oreIndex<6)?(oreIndex += 1):(oreIndex=0);
+    console.log(`Ore placing ${['C', 'R', 'W', 'S', 'r', 'g', 'b'][oreIndex]}`);
+  }
 }
 
 

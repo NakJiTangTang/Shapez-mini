@@ -13,11 +13,12 @@ class Element extends Subject{
         this.inRef = [0, 0];
         this.collider = 's';
         this.buildingDir = [dirIn, dirOut];
+        this.safeSpriteVisible = true;
         this.visible = true;
         //console.log([DIR_LATTICE[this.buildingDir[1]][0]-DIR_LATTICE[this.buildingDir[0]][0], DIR_LATTICE[this.buildingDir[1]][1]-DIR_LATTICE[this.buildingDir[0]][1]])
         this.sprite.draw = () => {
             this.positionSet();
-            if(this.visible){
+            if(this.safeSpriteVisible && this.visible){
                 let R= this.tileWidth*ElEM_RADIUS_INT;
                 push();
                 strokeWeight(this.tileWidth/30);
@@ -48,15 +49,15 @@ class Element extends Subject{
                             vertex(R, -R);
                             vertex(0, -R*0.6);
                             endShape(CLOSE);
+                        //Color ore
+                        }else if (layer.shape[i]=='Col'){
+                            ellipseMode(CENTER);
+                            ellipse(0, 0, 2*R, 2*R)
+                        }else if (layer.shape[i]=='-'){
                         }
                         rotate(-i*90);
                     }}
                 }
-
-                
-                
-                //
-                //ellipse(0, 0, 2*R, 2*R);
                 pop();
                 //console.log(this.movingPercent);
             }
@@ -89,13 +90,14 @@ class Element extends Subject{
         if (Y<0 || Y>height || X<0 || X>width){
             putY=height/2
             putX=width/2
-            this.visible=false;
+            this.safeSpriteVisible=false;
         }
-        else{this.visible=true;}
-        //console.log(this.visible);
+        else{this.safeSpriteVisible=true;}
+        //console.log(this.safeSpriteVisible);
         this.sprite.pos ={x:putX, y:putY};
     }
     
+    visibleChanger(toVisible){this.visible = toVisible};
     
     init([n, m], [dirIn, dirOut]){
         this.inWhere = [n, m];

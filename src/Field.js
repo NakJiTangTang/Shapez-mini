@@ -1,6 +1,6 @@
 import {MIN_DIST, CANVAS_WIDTH,CANVAS_HEIGHT, FIELD_HEIGHT, FIELD_WIDTH, ElEM_RADIUS_INT} from './Constants.js';
 import { Subject } from './Subject.js';
-import {Building} from './Building.js'
+import {Building, Ore} from './Building.js'
 
 
 class Field extends Subject{
@@ -12,8 +12,12 @@ class Field extends Subject{
         this.viewNum = 10;
         this.viewX=CANVAS_WIDTH/2;
         this.viewY=CANVAS_HEIGHT/2; 
+        this.Orelist = new Array(this.fieldH*this.fieldW);
+        this.Ores = new Array(this.fieldH*this.fieldW);
         //this.peekBuilding = new Building([0,0], 'up')
     }
+    
+    
     tileWidthIs(){
         return CANVAS_WIDTH / this.viewNum;
     }
@@ -23,6 +27,14 @@ class Field extends Subject{
 
         translate(this.viewX, this.viewY);
         rectMode(CENTER);
+        for (let i=0;i<this.Ores.length;i++){ 
+            if (this.Ores[i]){
+                this.Ores[i].dragWithElement(this.viewX, this.viewY);
+                if (this.buildings[i]){this.Ores[i].queue[0].visibleChanger(false);
+                }else {this.Ores[i].queue[0].visibleChanger(true);}
+            }
+        }
+
         fill(100);
         square(0, 0, 2.7*tileWidth);
         noFill();
@@ -88,6 +100,11 @@ class Field extends Subject{
     magnify(scrollDir){
         if (scrollDir<0) { this.viewNum = this.viewNum*0.8; }
         else {this.viewNum = this.viewNum*1.25;}
+        for (let ore of this.Ores){ 
+            if (ore){ore.changeTileWidth(this.tileWidthIs());}
+        }
+
+
         for (let building of this.buildings){
             if (building){
                 building.changeTileWidth(this.tileWidthIs());
@@ -108,8 +125,20 @@ class Field extends Subject{
         for (let building of this.buildings){
             if (building){building.movingElem()}
         }
-
     }
+    insertOre([n, m], ore){
+        this.Ores[this.nmIntoIndex([n, m])]=new Ore([n, m], ore)
+        this.Ores[this.nmIntoIndex([n, m])].changeTileWidth(this.tileWidthIs()) ;
+        this.subscribe(this.Ores[this.nmIntoIndex([n,m])]);
+        this.Ores[this.nmIntoIndex([n,m])].subscribe(this);
+        for (let ore of this.Ores){
+            if (ore){ore.movingElem()}
+        }
+    }
+
+
+
+
     deleteBuilding([n, m]){
         if (this.buildings[this.nmIntoIndex([n,m])]){
             this.buildings[this.nmIntoIndex([n,m])].delElemAll();
