@@ -27,15 +27,34 @@ class Element extends Subject{
                         fill(COLOR_PALET[layer.color[i]]);
                         rotate(i*90);
                         if (layer.shape[i]=='C'){
+                            ellipseMode(CENTER);
                             arc(0, 0, 2*R, 2*R, -90, 0, PIE)
+                        } else if (layer.shape[i]=='R'){
+                            rotate(-90);
+                            rectMode(CORNER);
+                            square(0, 0, R*0.85);
+                            rotate(90);
+                        } else if (layer.shape[i]=='W'){
+                            beginShape();
+                            vertex(0, 0);
+                            vertex(R, 0);
+                            vertex(R, -R);
+                            vertex(0, -R*0.6);
+                            endShape(CLOSE);
+                        } else if (layer.shape[i]=='S'){
+                            beginShape();
+                            vertex(0, 0);
+                            vertex(R*0.6, 0);
+                            vertex(R, -R);
+                            vertex(0, -R*0.6);
+                            endShape(CLOSE);
                         }
-                        
                         rotate(-i*90);
                     }}
                 }
 
                 
-                ellipseMode(CENTER);
+                
                 //
                 //ellipse(0, 0, 2*R, 2*R);
                 pop();

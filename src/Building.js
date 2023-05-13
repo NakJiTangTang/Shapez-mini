@@ -138,7 +138,7 @@ class Belt extends Building {
     
 
     // test element (delete!)
-    let layer1 = new Shape(['C', 'C', 'C', 'C'], ['u','r','g','b'])
+    let layer1 = new Shape(['S', 'S', 'S', 'S'], ['u','y','p','w'])
     this.queue.push(new Element([n, m], [layer1,0,0,0], this.dir));
     this.queue[0].subscribe (this)
 
