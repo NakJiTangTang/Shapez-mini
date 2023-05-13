@@ -1,4 +1,4 @@
-import {REF_SPEED, ElEM_RADIUS_INT, DIR_VEC, DIR_LATTICE} from './Constants.js';
+import {FRAME_RATE, REF_SPEED, ElEM_RADIUS_INT, DIR_VEC, DIR_LATTICE} from './Constants.js';
 
 import { Element} from './Element.js';
 
@@ -85,7 +85,7 @@ class Belt extends Building {
     else if (this.dirDelta()==(-0.5)) this.IMGURL = '../elem/buildings/belt_left.png'
     this.settingImg ();
     // test element (delete!)
-    this.queue.push(new Element([n, m], [0,0,0,0]));
+    this.queue.push(new Element([n, m], [0,0,0,0], this.dir));
 
 
 

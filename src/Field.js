@@ -31,11 +31,8 @@ class Field {
                 building.dragWithElement(this.viewX, this.viewY);
             }
         }
-
         translate(-this.viewX, -this.viewY);
-
         //this.drawPeek(tileWidth)
-
     }
     //Under consideration to implement
     drawPeek(tileWidth){

@@ -1,7 +1,9 @@
 // Constants for the game
+export const FRAME_RATE = 100;
 export const FIELD_WIDTH = 21;
 export const FIELD_HEIGHT = 21;
-export const REF_SPEED = 3;
+// REF_SPEED % /s
+export const REF_SPEED = 20;
 export const FONT_SIZE = 25;
 export const ElEM_RADIUS_INT = 0.5*0.5;
 export const ElEM_RADIUS_RATIO = 0.9;

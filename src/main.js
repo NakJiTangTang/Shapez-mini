@@ -1,6 +1,6 @@
 import '../css/style.css';
 
-import { CANVAS_WIDTH,CANVAS_HEIGHT, BUILDING_MODE, DIR_VEC, FIELD_HEIGHT, FIELD_WIDTH, REF_SPEED } from './Constants.js';
+import { FRAME_RATE, CANVAS_WIDTH,CANVAS_HEIGHT, BUILDING_MODE, DIR_VEC, FIELD_HEIGHT, FIELD_WIDTH, REF_SPEED } from './Constants.js';
 import { Field } from './Field.js';
 import { Belt} from './Building.js';
 import { Element} from './Element.js';
@@ -21,6 +21,7 @@ let buildingtype= 1;
 
 function setup() {
   createCanvas(CANVAS_WIDTH,CANVAS_HEIGHT);
+  frameRate(FRAME_RATE);
   field = new Field();
   imageMode(CENTER);
 }
@@ -70,6 +71,7 @@ function mouseDragged(event) {
         else if (abs(diffLattice[1])) (diffLattice[1]>0)?(dirOut='up'):(dirOut='down');
         let newBuilding;
         field.deleteBuilding(tempLattice);
+        field.deleteBuilding(nowLattice);
         try{
           newBuilding = new Belt(tempLattice, [dirIn, dirOut])
           field.insertBuilding(tempLattice,  newBuilding); 
