@@ -36,12 +36,18 @@ function mouseWheel(event) {
   field.magnify(event.deltaY);
 }
 
+function isInCanvas(mX, mY){
+  console.log(mX);
+  if (mX>=0 && mX<=width){
+    if (mY>=0 && mY<=height){return true};
+  }
+}
 
 let tempLattice
 let dirOut
 let dirIn
 function mousePressed() {
-  if (canEdit){
+  if (canEdit && isInCanvas(mouseX, mouseY)){
     let [n, m] = field.clickedLattice(mouseX, mouseY);
     if (noErase){
       //Add building
@@ -61,7 +67,7 @@ function vectorSum([a, b], [c, d]) {return [a+c, b+d]};
 
 function mouseDragged(event) {
   //console.log([event.movementX, event.movementY]);
-  if (canEdit){
+  if (canEdit && isInCanvas(mouseX, mouseY)){
     let nowLattice = field.clickedLattice(mouseX, mouseY)
     let diffLattice = [nowLattice[0]-tempLattice[0], nowLattice[1]-tempLattice[1]]
     
@@ -95,11 +101,12 @@ function mouseDragged(event) {
 }
 
 
-
+/*
 window.addEventListener('keydown', (event) => {
   const key = event.key
   if (key === ' ' ) {canEdit = false}
 })
+*/
 window.addEventListener('keyup', (event) => {
   const key = event.key
   if (key === ' ' ) {canEdit = true}
@@ -107,6 +114,9 @@ window.addEventListener('keyup', (event) => {
 
 // Spacebar to reload
 function keyPressed() {
+  if (key === ' ') {
+    canEdit = false; 
+  }
   if (key === 'e' || key === 'E') {
     console.log("editability changed")
     noErase = !noErase;
@@ -120,6 +130,7 @@ function keyPressed() {
     console.log("Building mode: Belt");
     buildingtype=BUILDING_MODE['belt'];
   }
+
 }
 
 
