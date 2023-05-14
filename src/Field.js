@@ -1,7 +1,7 @@
 import {MIN_DIST, CANVAS_WIDTH,CANVAS_HEIGHT, FIELD_HEIGHT, FIELD_WIDTH, ElEM_RADIUS_INT} from './Constants.js';
 import { Subject } from './Subject.js';
 import {Building, Ore} from './Building.js'
-import {Hub} from './Etcbuilding.js'
+import {Hub, HubInlet} from './Etcbuilding.js'
 import list from './OreList.json'
 
 class Field extends Subject{
@@ -16,6 +16,15 @@ class Field extends Subject{
         this.Orelist = new Array(this.fieldH*this.fieldW);
         this.Ores = new Array(this.fieldH*this.fieldW);
         this.loadOreList();
+        for (let i=-1; i<2; i++){
+            for (let j=-1; j<2; j++){
+                if (!(i==0 && j==0)){
+                    this.insertBuilding([i, j], new HubInlet([i, j]));
+                    console.log('asdfsd')
+                }
+            }
+        }
+
         this.insertBuilding([0, 0], new Hub());
         //this.peekBuilding = new Building([0,0], 'up')
     }
@@ -194,6 +203,9 @@ class Field extends Subject{
                 if(frombuilding.type !="miner"){
                     solution = false
                 }
+            }
+            if (buildingToSee && buildingToSee.type =="hubinlet"){
+                solution = true
             }
             this.notifySubscribers('IsNotJam', solution, others[0], others[2], (buildingToSee)?buildingToSee.type:'empty')
         }

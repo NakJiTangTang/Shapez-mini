@@ -43,7 +43,6 @@ class Miner extends Building {
 
 class Hub extends Building{
   constructor(){
-  
     super([0, 0], ['up', 'up']);
     this.type='hub';
     //console.log(this.dirDelta());
@@ -51,11 +50,17 @@ class Hub extends Building{
     this.settingImg ();
     this.invincible = true;
     this.storage = [];
-    
     // test element (delete!)
     //let layer1 = new Shape(['S', 'S', 'S', 'S'], ['u','y','p','w'])
     //this.queue.push(new Element([n, m], [layer1,0,0,0], this.dir));
     //this.queue[0].subscribe (this)
+    console.log(this.queue);
+  }
+  newElem(newElement){
+    this.queue.unshift(newElement);
+    this.queue[0].init(this.lattice, this.dir, this.tileWidth);
+    this.queue[0].visibleChanger(false)
+    newElement.subscribe(this);
     console.log(this.queue);
   }
   changeTileWidth(newTileWidth){
@@ -67,7 +72,27 @@ class Hub extends Building{
 }
 
 class HubInlet extends Building{
-
+  constructor([n, m]){
+    super([n, m], ['up', 'up']);
+    this.type='hubinlet';
+    this.invincible = true;
+  }
+  movingElem(){
+    if (this.queue.length){
+      for (let i=0;i<this.queue.length; i++){
+        if(this.queue[i].movingPercent!=100){
+          this.queue[i].movingPercent=100;
+        }
+      }
+      this.queue[this.queue.length-1].move();
+    }
+  }
+  settingImg(){};
+  update(source, ...others){
+    if (source == 'ElemReady'){ 
+      this.notifySubscribers('ElemTransferStart', this.queue.pop(), [0,0] );
+     }
+    }
 }
 
 
