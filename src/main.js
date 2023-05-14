@@ -122,7 +122,7 @@ function vectorSum([a, b], [c, d]) {return [a+c, b+d]};
 function mouseDragged(event) {
   //console.log([event.movementX, event.movementY]);
   let nowLattice = field.clickedLattice(mouseX, mouseY)
-  if ((abs(nowLattice[0])>=2||abs(nowLattice[1])>=2) && canEdit && noErase && isInCanvas(mouseX, mouseY)){
+  if (abs(nowLattice[0])>=2||abs(nowLattice[1])>=2 && canEdit && noErase && isInCanvas(mouseX, mouseY)){
     if (!tempLattice){
       tempLattice = nowLattice;
     }
@@ -135,7 +135,6 @@ function mouseDragged(event) {
         else if (abs(diffLattice[1])) (diffLattice[1]>0)?(dirOut='up'):(dirOut='down');
         
         field.deleteBuilding(tempLattice);
-        field.deleteBuilding(nowLattice);
         try{
           newBuilding = new Belt(tempLattice, [dirIn, dirOut])
           field.insertBuilding(tempLattice,  newBuilding); 
@@ -147,7 +146,10 @@ function mouseDragged(event) {
           };
         }
         newBuilding = new Belt(nowLattice, [dirOut, dirOut])
-        field.insertBuilding(nowLattice,  newBuilding);  
+        if (abs(nowLattice[0])>=2||abs(nowLattice[1])>=2){
+          field.deleteBuilding(nowLattice);
+          field.insertBuilding(nowLattice,  newBuilding);  
+        }
         dirIn = dirOut;
         tempLattice=nowLattice;
 
