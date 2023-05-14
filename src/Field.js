@@ -1,6 +1,7 @@
 import {MIN_DIST, CANVAS_WIDTH,CANVAS_HEIGHT, FIELD_HEIGHT, FIELD_WIDTH, ElEM_RADIUS_INT} from './Constants.js';
 import { Subject } from './Subject.js';
 import {Building, Ore} from './Building.js'
+import {Hub} from './Etcbuilding.js'
 import list from './OreList.json'
 
 class Field extends Subject{
@@ -15,6 +16,7 @@ class Field extends Subject{
         this.Orelist = new Array(this.fieldH*this.fieldW);
         this.Ores = new Array(this.fieldH*this.fieldW);
         this.loadOreList();
+        this.insertBuilding([0, 0], new Hub());
         //this.peekBuilding = new Building([0,0], 'up')
     }
     
@@ -56,11 +58,14 @@ class Field extends Subject{
             }
         }
 
-        fill(100);
-        square(0, 0, 2.7*tileWidth);
-        noFill();
         for (let building of this.buildings){ 
-            if (building){
+            if (building && building.type=='belt'){
+                building.draw()
+                building.dragWithElement(this.viewX, this.viewY);
+            }
+        }
+        for (let building of this.buildings){ 
+            if (building && building.type!=='belt'){
                 building.draw()
                 building.dragWithElement(this.viewX, this.viewY);
             }
@@ -185,12 +190,12 @@ class Field extends Subject{
                 else{solution = false}
             }
             else{solution = false}
-            if (buildingToSee.type =="miner"){
+            if (buildingToSee && buildingToSee.type =="miner"){
                 if(frombuilding.type !="miner"){
                     solution = false
                 }
             }
-            this.notifySubscribers('IsNotJam', solution, others[0], others[2], buildingToSee.type)
+            this.notifySubscribers('IsNotJam', solution, others[0], others[2], (buildingToSee)?buildingToSee.type:'empty')
         }
         if (source == 'ElemTransferStart'){
             // others: [element, new [n, m]]

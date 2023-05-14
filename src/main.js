@@ -51,7 +51,7 @@ let dirIn
 function mousePressed() {
   let newBuilding;
   let [n, m] = field.clickedLattice(mouseX, mouseY);
-  if (n && canEdit && isInCanvas(mouseX, mouseY) && !(field.nmIntoIndex([n, m]).invincible)){
+  if ((n || m)&& canEdit && isInCanvas(mouseX, mouseY) && !(field.nmIntoIndex([n, m]).invincible)){
     if (noErase){
       //Add building
       //basic direction (starting point)
@@ -83,7 +83,7 @@ function vectorSum([a, b], [c, d]) {return [a+c, b+d]};
 function mouseDragged(event) {
   //console.log([event.movementX, event.movementY]);
   let nowLattice = field.clickedLattice(mouseX, mouseY)
-  if (nowLattice[0] && canEdit && noErase && isInCanvas(mouseX, mouseY)){
+  if ((nowLattice[0]||nowLattice[1]) && canEdit && noErase && isInCanvas(mouseX, mouseY)){
     if (!tempLattice){
       tempLattice = nowLattice;
     }

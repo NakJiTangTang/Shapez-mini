@@ -47,7 +47,7 @@ class Hub extends Building{
     super([0, 0], ['up', 'up']);
     this.type='hub';
     //console.log(this.dirDelta());
-    this.IMGURL = '../elem/buildings/hub.new.png';
+    this.IMGURL = '../elem/buildings/hub_new.png';
     this.settingImg ();
     this.invincible = true;
     this.storage = [];
@@ -59,7 +59,7 @@ class Hub extends Building{
     console.log(this.queue);
   }
   changeTileWidth(newTileWidth){
-    this.tileWidth = 3*newTileWidth;
+    this.tileWidth = 3.5*newTileWidth;
     for (let element of this.queue){
       element.tileWidth = 0;
     }
