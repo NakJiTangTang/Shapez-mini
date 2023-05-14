@@ -101,6 +101,7 @@ function mousePressed() {
         //console.log([DIR_LATTICE[dirIn][1], -DIR_LATTICE[dirIn][0] ]);
         newBuilding = new Cutter([n, m], [dirIn, dirIn], [n+DIR_LATTICE[dirIn][1], m-DIR_LATTICE[dirIn][0] ])
         newCounter = new Counterpart([n+DIR_LATTICE[dirIn][1], m-DIR_LATTICE[dirIn][0] ], [dirIn, dirIn], [n, m])
+        newCounter.inletOK = false;
       }
       field.insertBuilding(newBuilding.lattice,  newBuilding); 
       if (newCounter){field.insertBuilding(newCounter.lattice,  newCounter); }

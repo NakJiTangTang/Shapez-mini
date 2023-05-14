@@ -224,6 +224,9 @@ class Field extends Subject{
             if (buildingToSee && buildingToSee.type =="hubinlet"){
                 solution = true
             }
+            if (buildingToSee && buildingToSee.type =="counterpart"){
+                if (!buildingToSee.inletOK){solution = false}
+            }
             this.notifySubscribers('IsNotJam', solution, others[0], others[2], (buildingToSee)?buildingToSee.type:'empty')
         }
         if (source == 'ElemTransferStart'){

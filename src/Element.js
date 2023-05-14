@@ -23,6 +23,8 @@ class Element extends Subject{
                 push();
                 strokeWeight(this.tileWidth/30);
                 stroke(100);
+                fill(100);
+                ellipse(0, 0, R, R)
                 for (let layer of this.layers){
                     if(layer){for (let i=0; i<4; i++){
                         fill(COLOR_PALET[layer.color[i]]);
