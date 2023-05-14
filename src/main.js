@@ -30,7 +30,34 @@ function setup() {
 function draw() {
   background('#eeeeee');
   field.draw();
+
+  noStroke()
+
+  fill(100)
+  textSize(height/20 );
+  textStyle(BOLD);
+  textAlign(CENTER, CENTER);
+  //console.log('adsfadsfds')
+  let quote = ""
+  if (canEdit ==false){
+    quote = "Dragging"
+  }
+  else if (noErase == false){
+    quote = "Erasing mode"
+  }
+  else{
+    let buildingName=getKeyByValue(BUILDING_MODE, buildingtype);
+    buildingName = buildingName.charAt(0).toUpperCase() + buildingName.slice(1);
+    quote = `Building : ${buildingName}, ${dirArray[dirInIndex]}`
+  }
+
+
+  text(quote, width/2, height-height/20)
+
 }
+
+
+function getKeyByValue(obj, value) {return Object.keys(obj).find(key => obj[key] === value);}
 
 
 function mouseWheel(event) {
@@ -115,8 +142,6 @@ function mouseDragged(event) {
 
       }
     }
-    
-
   }
   else if((abs(nowLattice[0])>=2||abs(nowLattice[1])>=2) && canEdit && isInCanvas(mouseX, mouseY)) {
     field.deleteBuilding(tempLattice);
