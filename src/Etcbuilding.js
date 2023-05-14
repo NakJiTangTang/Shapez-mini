@@ -61,12 +61,27 @@ class Hub extends Building{
     this.queue[0].init(this.lattice, this.dir, this.tileWidth);
     this.queue[0].visibleChanger(false)
     newElement.subscribe(this);
-    console.log(this.queue);
+    
   }
+  
   changeTileWidth(newTileWidth){
     this.tileWidth = 3.5*newTileWidth;
-    for (let element of this.queue){
-      element.tileWidth = 0;
+  }
+  movingElem(){2
+    if (this.queue.length){
+      for (let element of this.queue){
+        let layers = [...element.layers];
+        let layersStr = [];
+        for (let layer of layers){
+          if(layer){
+            layersStr.push([...layer.color, ...layer.shape].toString()) 
+          }else {layersStr.push(0)};
+      }
+        this.storage.push(layersStr.toString());
+        //this.storage.push(layers.toString());
+        this.queue.shift();
+      }
+      console.log(this.storage);
     }
   }
 }
