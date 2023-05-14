@@ -244,8 +244,8 @@ class Field extends Subject{
                 loot.newElemCounter(others[0]);
             }
 
-            // others: [slave lattice itself [n, m], loot.queueCounterJam]
-            this.notifySubscribers('IsRootJamed', others[2], loot.queueCounterJam)
+            // others: [slave lattice itself [n, m], loot.queueCounterJam, loot.queueJam]
+            this.notifySubscribers('IsRootJamed', others[2], loot.queueCounterJam, loot.queueJam)
         }
     }
 }

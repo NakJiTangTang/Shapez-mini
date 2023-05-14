@@ -6,7 +6,7 @@ import {MIN_DIST, REF_SPEED, ElEM_RADIUS_INT, DIR_VEC, DIR_LATTICE} from './Cons
 class Counterpart extends Building {
     constructor([n, m], [dirIn, dirOut], [rootN, rootM]){
       super([n, m], [dirIn, dirOut]);
-
+      this.isJammed = false;
       this.inletOK = true;
       this.type='counterpart';
       this.root = [rootN, rootM]
@@ -16,7 +16,6 @@ class Counterpart extends Building {
     }
     settingImg(){};
     movingElem(){
-  
       if (this.queue.length && !(this.isJammed)){
             for (let i=0;i<this.queue.length; i++){
               //console.log('CounterpartElem',this.queue.pop(), this.root , this.dir)  
@@ -32,9 +31,9 @@ class Counterpart extends Building {
         this.notifySubscribers('CheckNext', this.nextLattice, this.dir[1], this.lattice, this.type);
       }
       if (source == 'IsRootJamed' && (this.inselfLattice.toString()==others[0].toString())){
-        // others: []
-        console.log(others[1]);
-        this.isJammed = others[1];
+        // others: [slave lattice itself [n, m], loot.queueCounterJam, loot.queueJam]
+        this.isJammed = (others[1] && others[2]);
+        console.log(this.isJammed);
       }
     
     
@@ -49,7 +48,7 @@ class Dualbuilding extends Building {
       this.latticeCounter = [slaveN, slaveM];
       //Placeholder
       this.nextLattice_counter = [slaveN, slaveM];
-
+      this.twoOutOnly = false;
       this.dual = true;
       this.type='Dualbuilding';
       this.IMGURL = '../elem/buildings/cutter.png';
@@ -74,7 +73,8 @@ class Dualbuilding extends Building {
               que[i].move();
             }
           }
-          que[que.length-1].move();
+          //console.log(que)
+          if((que[que.length-1])) {que[que.length-1].move()};
         }
       }
       queueMove(this.queue) 
@@ -98,8 +98,10 @@ class Dualbuilding extends Building {
           this.isJammed=true}
         else{ 
           this.isJammed=false
-          if(this.queueJam){this.queue.pop()}
-          if(this.queueCounterJam){this.queueCounter.pop()}
+          if (this.twoOutOnly){
+            if(this.queueJam){this.queue.pop()}
+            if(this.queueCounterJam){this.queueCounter.pop()}
+          }
         }
 
     }
@@ -148,6 +150,7 @@ class Cutter extends Dualbuilding {
     this.type='cutter';
     this.IMGURL = '../elem/buildings/cutter.png';
     this.settingImg ();
+    this.twoOutOnly = true;
   }
   splitElement(newElement){
     let originSide;
@@ -188,15 +191,36 @@ class Balancer extends Dualbuilding {
     this.settingImg ();
   }
   newElem(newElement){
-    this.queue.unshift(newElement);
-    this.queue[0].init(this.lattice, this.dir, this.tileWidth);
-    this.queue[0].visibleChanger(false)
+    //console.log(this.queueJam, this.queueCounterJam);
+    if(this.queueJam &&  !(this.queueCounterJam)){
+      this.queueCounter.unshift(newElement);
+      this.queueCounter[0].init(this.lattice, this.dir, this.tileWidth);
+      this.queueCounter[0].visibleChanger(false)
+    }
+    else{
+      this.queue.unshift(newElement);
+      this.queue[0].init(this.lattice, this.dir, this.tileWidth);
+      this.queue[0].visibleChanger(false)
+      if ((this.queueCounterJam) && this.queueCounter.length){
+        this.queue.unshift(this.queueCounter.pop());
+      }
+    }
     newElement.subscribe(this);
   }
   newElemCounter(newElement){
-    this.queueCounter.unshift(newElement);
-    this.queueCounter[0].init(this.lattice, this.dir, this.tileWidth);
-    this.queueCounter[0].visibleChanger(false)
+    if(this.queueCounterJam &&  !(this.queueJam)){
+      this.queue.unshift(newElement);
+      this.queue[0].init(this.lattice, this.dir, this.tileWidth);
+      this.queue[0].visibleChanger(false)
+    }
+    else{
+      this.queueCounter.unshift(newElement);
+      this.queueCounter[0].init(this.lattice, this.dir, this.tileWidth);
+      this.queueCounter[0].visibleChanger(false)
+      if ((this.queueJam) && this.queue.length){
+        this.queueCounter.unshift(this.queue.pop());
+      }
+    }
     newElement.subscribe(this);
   }
 }
