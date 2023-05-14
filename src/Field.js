@@ -151,8 +151,14 @@ class Field extends Subject{
         this.viewX+=dragDirX;
         this.viewY+=dragDirY;
     }
+    
     nmIntoIndex([n, m]){return FIELD_WIDTH*((FIELD_HEIGHT-1)/2-m) + (n+(FIELD_WIDTH-1)/2);}
     indexIntoNM(index){return [(index%FIELD_WIDTH) - (FIELD_WIDTH-1)/2 , -1*floor(index/FIELD_WIDTH) + (FIELD_HEIGHT-1)/2]}
+    takeType([n, m]){
+        if (this.buildings[this.nmIntoIndex([n, m])]){
+            return this.buildings[this.nmIntoIndex([n, m])].type;
+        }
+    }
     insertBuilding([n, m], building){
         building.changeTileWidth(this.tileWidthIs()) ;
         this.buildings[this.nmIntoIndex([n,m])] = building;
@@ -173,9 +179,6 @@ class Field extends Subject{
         }
     }
 
-
-
-
     deleteBuilding([n, m]){
         let building = this.buildings[this.nmIntoIndex([n,m])];
         if (building){
@@ -194,9 +197,12 @@ class Field extends Subject{
                 slaveBuilding.unsubscribeAll();
                 this.buildings[this.nmIntoIndex(building.latticeCounter)] = 0
             }
-            building.delElemAll();
-            this.unsubscribe(building);
-            building.unsubscribeAll();
+            if (!(building.invincible)){
+                building.delElemAll();
+                this.unsubscribe(building);
+                building.unsubscribeAll();
+            }
+            
         };
         this.buildings[this.nmIntoIndex([n,m])]=0;
     }

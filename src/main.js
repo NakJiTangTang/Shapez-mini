@@ -146,14 +146,15 @@ function mouseDragged(event) {
   //console.log([event.movementX, event.movementY]);
   let nowLattice = field.clickedLattice(mouseX, mouseY)
   if(!canEdit) {field.drag(event.movementX, event.movementY);}
-  else if ((abs(nowLattice[0])>=2||abs(nowLattice[1])>=2) && noErase && isInCanvas(mouseX, mouseY)){
-    if (!tempLattice){
-      tempLattice = nowLattice;
-    }
+  if (!tempLattice){
+    tempLattice = nowLattice;
+  }
+  else if (noErase && isInCanvas(mouseX, mouseY)){
+    
     let diffLattice = [nowLattice[0]-tempLattice[0], nowLattice[1]-tempLattice[1]]
     let newBuilding;
 
-    if (buildingtype==BUILDING_MODE['belt']){
+    if (buildingtype==BUILDING_MODE['belt'] && (abs(tempLattice[0])>=2||abs(tempLattice[1])>=2) ){
       if (abs(diffLattice[0])+abs(diffLattice[1])) {
         if (abs(diffLattice[0])) (diffLattice[0]>0)?(dirOut='right'):(dirOut='left');
         else if (abs(diffLattice[1])) (diffLattice[1]>0)?(dirOut='up'):(dirOut='down');
@@ -169,8 +170,8 @@ function mouseDragged(event) {
             field.insertBuilding(tempLattice,  newBuilding); 
           };
         }
-        newBuilding = new Belt(nowLattice, [dirOut, dirOut])
         if (abs(nowLattice[0])>=2||abs(nowLattice[1])>=2){
+          newBuilding = new Belt(nowLattice, [dirOut, dirOut])
           field.deleteBuilding(nowLattice);
           field.insertBuilding(nowLattice,  newBuilding);  
         }
