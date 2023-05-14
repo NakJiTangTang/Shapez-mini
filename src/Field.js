@@ -132,18 +132,20 @@ class Field extends Subject{
         return lattice;
     }
     magnify(scrollDir){
-        if (scrollDir<0) { this.viewNum = this.viewNum*0.8; }
-        else {this.viewNum = this.viewNum*1.25;}
+
+        if (this.viewNum>8 && scrollDir<0) { this.viewNum = this.viewNum*0.8; }
+        else if (this.viewNum<30 && scrollDir> 0){this.viewNum = this.viewNum*1.25;}
+        else {this.viewNum = this.viewNum }
+
         for (let ore of this.Ores){ 
             if (ore){ore.changeTileWidth(this.tileWidthIs());}
         }
-
-
         for (let building of this.buildings){
             if (building){
                 building.changeTileWidth(this.tileWidthIs());
             }
         }
+        
     }
     drag(dragDirX, dragDirY){
         this.viewX+=dragDirX;

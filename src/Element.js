@@ -76,7 +76,7 @@ class Element extends Subject{
     }
     positionSet(){
         let X, Y, dir, dirOut;
-        let R= this.tileWidth*ElEM_RADIUS_INT-1;
+        let R= this.tileWidth*ElEM_RADIUS_INT*0.9;
         X = this.inRef[0]+this.inWhere[0]*this.tileWidth
         Y = this.inRef[1]-this.inWhere[1]*this.tileWidth
         dir = DIR_LATTICE[this.buildingDir[0]];
