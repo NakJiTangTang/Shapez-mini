@@ -3,7 +3,7 @@ export const FRAME_RATE = 50;
 export const FIELD_WIDTH = 21;
 export const FIELD_HEIGHT = 21;
 // REF_SPEED % /s
-export const REF_SPEED = 70;
+export const REF_SPEED = 200;
 export const MIN_DIST = 51;
 
 export const FONT_SIZE = 25;
@@ -18,4 +18,4 @@ export const BUILDING_MODE = {belt:1, miner:2}
 
 export const COLOR_PALET = {r: 'crimson', g:'limegreen', b:'dodgerblue', 
                             y: 'gold', p: 'orchid', c: 'aqua',
-                            u: 'grey', w:'ghostwhite'}
+                            u: 'grey', w:'ghostwhite', '-':'ghostwhite'}

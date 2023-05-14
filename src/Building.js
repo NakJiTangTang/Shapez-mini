@@ -56,7 +56,7 @@ class Building extends Subject{
     }
     delElemAll(){for (let element of this.queue){element.sprite.remove();}}
 
-    changeTileWidth(newTileWidth){
+  changeTileWidth(newTileWidth){
       this.tileWidth = newTileWidth;
       for (let element of this.queue){
         element.tileWidth = this.tileWidth;

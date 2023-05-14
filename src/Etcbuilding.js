@@ -2,6 +2,8 @@ import {Building} from './Building.js'
 import {Element} from './Element.js'
 import { Shape} from './Shape.js';
 import {MIN_DIST, REF_SPEED, ElEM_RADIUS_INT, DIR_VEC, DIR_LATTICE} from './Constants.js';
+import Levels from './Level.json'
+
 
 class Miner extends Building {
     constructor([n, m], [dirIn, dirOut], Ore){
@@ -34,7 +36,6 @@ class Miner extends Building {
         }
         this.movingElem()
         if (!(this.queue.length) && this.layer){
-            console.log('asdf')
             this.newElem(new Element(this.dir, [this.layer,0,0,0], this.dir))
         }
     }
@@ -50,11 +51,11 @@ class Hub extends Building{
     this.settingImg ();
     this.invincible = true;
     this.storage = {};
-    // test element (delete!)
-    //let layer1 = new Shape(['S', 'S', 'S', 'S'], ['u','y','p','w'])
-    //this.queue.push(new Element([n, m], [layer1,0,0,0], this.dir));
-    //this.queue[0].subscribe (this)
-    console.log(this.queue);
+    this.level = 0; 
+    this.levelLayer = 0;
+    this.changeLevelLayer(this.level)
+    console.log(this.levelLayer);
+    console.log(this.levelTarget);
   }
   newElem(newElement){
     this.queue.unshift(newElement);
@@ -62,11 +63,7 @@ class Hub extends Building{
     this.queue[0].visibleChanger(false)
     newElement.subscribe(this);
     
-  }
-  
-  changeTileWidth(newTileWidth){
-    this.tileWidth = 3.5*newTileWidth;
-  }
+  } 
   movingElem(){
     if (this.queue.length){
       for (let element of this.queue){
@@ -88,7 +85,61 @@ class Hub extends Building{
       }
       console.log(this.storage);
     }
+    this.levelWorking();
   }
+   
+    changeTileWidth(newTileWidth){
+      this.tileWidth = 3.5*newTileWidth;
+      this.shapeWidth =2*  newTileWidth;
+      this.levelLayer.tileWidth = this.shapeWidth;
+    }
+    
+    dragWithElement(refX, refY){
+      this.levelLayer.tileWidth = this.shapeWidth  
+      this.levelLayer.inRef = [refX, refY];
+    }
+
+    levelWorking(){
+      if(this.storage[this.levelTarget]>=this.levelAmount){
+        
+        console.log(this.level)
+        console.log("Clear!!")
+        console.log("Clear!!")
+        this.level+=1;
+        console.log("Clear!!")
+        console.log(this.level);
+        this.changeLevelLayer(this.level);
+        this.storage = {};
+      }
+    }
+
+  changeLevelLayer(level){
+    if (this.levelLayer){
+      console.log(this.levelLayer)
+      this.levelLayer.sprite.remove();
+      console.log(this.levelLayer)
+      this.levelLayer.unsubscribeAll()
+      this.levelLayer = 0;
+    }
+    let layersData =  Levels[level][0];
+    let targets = [];
+    let layers = [];
+    for (let layer of layersData){
+      if (layer[0]==0){
+        layers.push(0);
+        targets.push("0");
+      }else{
+        layers.push(new Shape(layer[1], layer[0 ], this.dir));
+        targets.push([...layer[0], ...layer[1]])
+      }
+    }
+    this.levelAmount = Levels[level][1];
+    this.levelTarget = targets.toString();
+    this.levelLayer = new Element([0, 0], layers, this.dir)
+    this.levelLayer.movingPercent=50;
+    this.levelLayer.subscribe (this)
+  }
+
 }
 
 class HubInlet extends Building{

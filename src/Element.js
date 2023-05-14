@@ -26,6 +26,7 @@ class Element extends Subject{
                 for (let layer of this.layers){
                     if(layer){for (let i=0; i<4; i++){
                         fill(COLOR_PALET[layer.color[i]]);
+                        if(layer.color[i]=='-'){noFill()}
                         rotate(i*90);
                         if (layer.shape[i]=='C'){
                             ellipseMode(CENTER);
@@ -54,6 +55,7 @@ class Element extends Subject{
                             ellipseMode(CENTER);
                             ellipse(0, 0, 2*R, 2*R)
                         }else if (layer.shape[i]=='-'){
+                            layer.color[i] = '-';
                         }
                         rotate(-i*90);
                     }}
