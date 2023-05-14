@@ -98,9 +98,11 @@ class Building extends Subject{
     }
     newElem(newElement){
       this.queue.unshift(newElement);
-      this.queue[0].init(this.lattice, this.dir, this.tileWidth);
-      this.queue[0].visibleChanger(false)
-      newElement.subscribe(this);
+      if(this.queue[0]){
+        this.queue[0].init(this.lattice, this.dir, this.tileWidth);
+        this.queue[0].visibleChanger(false)
+        newElement.subscribe(this);
+      }
     }
 
     update(source, ...others){
