@@ -12,20 +12,34 @@ class Counterpart extends Building {
       this.root = [rootN, rootM]
       //console.log(this.dirDelta());
       this.settingImg ();
-      console.log(this.queue);
-      //Placeholder
-      this.nextLattice_counter=[n, m]
-
-
+      this.inselfLattice=[n, m]
     }
     settingImg(){};
     movingElem(){
-        if (this.queue.length){
+  
+      if (this.queue.length && !(this.isJammed)){
             for (let i=0;i<this.queue.length; i++){
-                this.notifySubscribers('CounterpartElem',this.queue.pop(), this.root , this.dir );
+              //console.log('CounterpartElem',this.queue.pop(), this.root , this.dir)  
+              //console.log(this.observers);
+              this.notifySubscribers('CounterpartElem', this.queue.pop(), this.root , this.inselfLattice );
             }
-          }
+        }
+        else {this.notifySubscribers('CounterpartElem', 0, this.root , this.inselfLattice );}
     }
+    update(source, ...others){
+      if (source == 'ElemReady'){
+        // others: []
+        this.notifySubscribers('CheckNext', this.nextLattice, this.dir[1], this.lattice, this.type);
+      }
+      if (source == 'IsRootJamed' && (this.inselfLattice.toString()==others[0].toString())){
+        // others: []
+        console.log(others[1]);
+        this.isJammed = others[1];
+      }
+    
+    
+    }
+
 }
 
 class Dualbuilding extends Building {
@@ -156,15 +170,38 @@ class Cutter extends Dualbuilding {
   
   newElem(newElement){
     let [originSide, counterSide] = this.splitElement(newElement)
-    
     this.queue.unshift(originSide);
     this.queue[0].init(this.lattice, this.dir, this.tileWidth);
     this.queue[0].visibleChanger(false)
     originSide.subscribe(this);
-
     this.newElemCounter(counterSide);
   }
 
 }
 
-export {Counterpart, Cutter}
+class Balancer extends Dualbuilding {
+  constructor([n, m], [dirIn, dirOut], [slaveN, slaveM]){
+    super([n, m], [dirIn, dirOut], [slaveN, slaveM])
+    this.nextLattice_counter = [n+DIR_LATTICE[dirIn][1]+DIR_LATTICE[dirIn][0], m-DIR_LATTICE[dirIn][0]+DIR_LATTICE[dirIn][1]]
+    this.type='balancer';
+    this.IMGURL = '../elem/buildings/balancer.png';
+    this.settingImg ();
+  }
+  newElem(newElement){
+    this.queue.unshift(newElement);
+    this.queue[0].init(this.lattice, this.dir, this.tileWidth);
+    this.queue[0].visibleChanger(false)
+    newElement.subscribe(this);
+  }
+  newElemCounter(newElement){
+    this.queueCounter.unshift(newElement);
+    this.queueCounter[0].init(this.lattice, this.dir, this.tileWidth);
+    this.queueCounter[0].visibleChanger(false)
+    newElement.subscribe(this);
+  }
+}
+
+
+
+
+export {Counterpart, Cutter, Balancer}

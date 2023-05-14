@@ -226,6 +226,7 @@ class Field extends Subject{
             }
             if (buildingToSee && buildingToSee.type =="counterpart"){
                 if (!buildingToSee.inletOK){solution = false}
+                if (buildingToSee.isJammed){solution = false}
             }
             this.notifySubscribers('IsNotJam', solution, others[0], others[2], (buildingToSee)?buildingToSee.type:'empty')
         }
@@ -236,13 +237,15 @@ class Field extends Subject{
         }
         if (source == 'CounterpartElem'){
             // others: [element, root [rootN, rootM], lattice itself [n, m]]
-            //console.log(others);
+            
             let loot = this.buildings[this.nmIntoIndex(others[1])];
-            if (loot.dual && loot.lattice.toString()==others[2].toString()){
+            //console.log(others[2].toString());
+            if (loot.dual && others[0] && (loot.latticeCounter.toString()==others[2].toString())){
                 loot.newElemCounter(others[0]);
-                console.log(others[0]);
             }
 
+            // others: [slave lattice itself [n, m], loot.queueCounterJam]
+            this.notifySubscribers('IsRootJamed', others[2], loot.queueCounterJam)
         }
     }
 }

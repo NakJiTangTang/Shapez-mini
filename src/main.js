@@ -4,7 +4,7 @@ import { FRAME_RATE, CANVAS_WIDTH,CANVAS_HEIGHT, BUILDING_MODE, DIR_LATTICE, FIE
 import { Field } from './Field.js';
 import { Belt} from './Building.js';
 import { Miner, Rotater} from './Etcbuilding.js';
-import {Counterpart, Cutter} from './Dualbuilding.js';
+import {Counterpart, Cutter, Balancer} from './Dualbuilding.js';
 import { Element} from './Element.js';
 
 // Globals
@@ -103,6 +103,17 @@ function mousePressed() {
         newCounter = new Counterpart([n+DIR_LATTICE[dirIn][1], m-DIR_LATTICE[dirIn][0] ], [dirIn, dirIn], [n, m])
         newCounter.inletOK = false;
       }
+      else if (buildingtype==BUILDING_MODE['balancer']){
+        //console.log('asdf')
+        console.log(DIR_LATTICE[dirIn]);
+        //console.log([DIR_LATTICE[dirIn][1], -DIR_LATTICE[dirIn][0] ]);
+        newBuilding = new Balancer([n, m], [dirIn, dirIn], [n+DIR_LATTICE[dirIn][1], m-DIR_LATTICE[dirIn][0] ])
+        newCounter = new Counterpart([n+DIR_LATTICE[dirIn][1], m-DIR_LATTICE[dirIn][0] ], [dirIn, dirIn], [n, m])
+        newCounter.inletOK = true;
+      }
+
+
+
       else if (buildingtype==BUILDING_MODE['rotater']){
         newBuilding = new Rotater([n, m], [dirIn, dirIn])
       }
@@ -215,6 +226,10 @@ function keyPressed() {
   if (key === '4') {
     console.log("Building mode: Rotater");
     buildingtype=BUILDING_MODE['rotater'];
+  }
+  if (key === '5') {
+    console.log("Building mode: Balancer");
+    buildingtype=BUILDING_MODE['balancer'];
   }
   //Ore test
   /*

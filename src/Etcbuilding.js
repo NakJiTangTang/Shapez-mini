@@ -103,9 +103,9 @@ class Hub extends Building{
       let count  = this.storage[this.levelTarget];
       if(!count){count= 0};
       if(count>=this.levelAmount){
-        console.log(this.level)
+        console.log(this.level);
 
-        (Levels.length-1>this.level)?(this.level+=1):(this.level=0)
+        ((Levels.length-1)>this.level)?(this.level+=1):(this.level=0)
         
         this.levelLayer.sprite.text ="Clear!!"
         console.log(this.level);
