@@ -177,10 +177,26 @@ class Field extends Subject{
 
 
     deleteBuilding([n, m]){
-        if (this.buildings[this.nmIntoIndex([n,m])]){
-            this.buildings[this.nmIntoIndex([n,m])].delElemAll();
-            this.unsubscribe(this.buildings[this.nmIntoIndex([n,m])]);
-            this.buildings[this.nmIntoIndex([n,m])].unsubscribeAll();
+        let building = this.buildings[this.nmIntoIndex([n,m])];
+        if (building){
+            //console.log(building.latticeCounter)
+            if (building.type=='counterpart'){
+                let originBuilding = this.buildings[this.nmIntoIndex(building.root)];
+                originBuilding.delElemAll();
+                this.unsubscribe(originBuilding);
+                originBuilding.unsubscribeAll();
+                this.buildings[this.nmIntoIndex(building.root)] =0;
+            } else if(building.dual){
+                console.log(building.latticeCounter)
+                let slaveBuilding = this.buildings[this.nmIntoIndex(building.latticeCounter)];
+                slaveBuilding.delElemAll();
+                this.unsubscribe(slaveBuilding);
+                slaveBuilding.unsubscribeAll();
+                this.buildings[this.nmIntoIndex(building.latticeCounter)] = 0
+            }
+            building.delElemAll();
+            this.unsubscribe(building);
+            building.unsubscribeAll();
         };
         this.buildings[this.nmIntoIndex([n,m])]=0;
     }
@@ -214,6 +230,16 @@ class Field extends Subject{
             // others: [element, new [n, m]]
             //console.log(others);
             this.buildings[this.nmIntoIndex(others[1])].newElem(others[0]);
+        }
+        if (source == 'CounterpartElem'){
+            // others: [element, root [rootN, rootM], lattice itself [n, m]]
+            //console.log(others);
+            let loot = this.buildings[this.nmIntoIndex(others[1])];
+            if (loot.dual && loot.lattice.toString()==others[2].toString()){
+                loot.newElemCounter(others[0]);
+                console.log(others[0]);
+            }
+
         }
     }
 }

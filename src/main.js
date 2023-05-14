@@ -1,9 +1,10 @@
 import '../css/style.css';
 
-import { FRAME_RATE, CANVAS_WIDTH,CANVAS_HEIGHT, BUILDING_MODE, DIR_VEC, FIELD_HEIGHT, FIELD_WIDTH, REF_SPEED } from './Constants.js';
+import { FRAME_RATE, CANVAS_WIDTH,CANVAS_HEIGHT, BUILDING_MODE, DIR_LATTICE, FIELD_HEIGHT, FIELD_WIDTH, REF_SPEED } from './Constants.js';
 import { Field } from './Field.js';
 import { Belt} from './Building.js';
 import { Miner} from './Etcbuilding.js';
+import {Counterpart, Cutter} from './Dualbuilding.js';
 import { Element} from './Element.js';
 
 // Globals
@@ -77,6 +78,7 @@ let dirIn
 //let oreIndex = 0;
 function mousePressed() {
   let newBuilding;
+  let newCounter;
   let [n, m] = field.clickedLattice(mouseX, mouseY);
   //console.log(field.buildings[field.nmIntoIndex([n, m])].invincible);
   if ((abs(n)>=2||abs(m)>=2)&& canEdit && isInCanvas(mouseX, mouseY)){
@@ -93,7 +95,15 @@ function mousePressed() {
         //console.log('asdf')
         newBuilding = new Miner([n, m], [dirIn, dirIn], field.Ores[field.nmIntoIndex([n, m])])
       }
+      else if (buildingtype==BUILDING_MODE['cutter']){
+        //console.log('asdf')
+        console.log(DIR_LATTICE[dirIn]);
+        //console.log([DIR_LATTICE[dirIn][1], -DIR_LATTICE[dirIn][0] ]);
+        newBuilding = new Cutter([n, m], [dirIn, dirIn], [n+DIR_LATTICE[dirIn][1], m-DIR_LATTICE[dirIn][0] ])
+        newCounter = new Counterpart([n+DIR_LATTICE[dirIn][1], m-DIR_LATTICE[dirIn][0] ], [dirIn, dirIn], [n, m])
+      }
       field.insertBuilding(newBuilding.lattice,  newBuilding); 
+      if (newCounter){field.insertBuilding(newCounter.lattice,  newCounter); }
     }
     else {
       field.deleteBuilding([n, m]);
@@ -188,6 +198,11 @@ function keyPressed() {
   if (key === '2') {
     console.log("Building mode: Miner");
     buildingtype=BUILDING_MODE['miner'];
+    //console.log(buildingtype);
+  }
+  if (key === '3') {
+    console.log("Building mode: Cutter");
+    buildingtype=BUILDING_MODE['cutter'];
     //console.log(buildingtype);
   }
   //Ore test
