@@ -18,7 +18,7 @@ class Element extends Subject{
         //console.log([DIR_LATTICE[this.buildingDir[1]][0]-DIR_LATTICE[this.buildingDir[0]][0], DIR_LATTICE[this.buildingDir[1]][1]-DIR_LATTICE[this.buildingDir[0]][1]])
         this.sprite.draw = () => {
             this.positionSet();
-            if(this.safeSpriteVisible && this.visible){
+            if(this.visible && this.safeSpriteVisible){
                 let R= this.tileWidth*ElEM_RADIUS_INT;
                 push();
                 strokeWeight(this.tileWidth/30);
@@ -65,7 +65,7 @@ class Element extends Subject{
     }
     positionSet(){
         let X, Y, dir, dirOut;
-        
+        let R= this.tileWidth*ElEM_RADIUS_INT-1;
         X = this.inRef[0]+this.inWhere[0]*this.tileWidth
         Y = this.inRef[1]-this.inWhere[1]*this.tileWidth
         dir = DIR_LATTICE[this.buildingDir[0]];
@@ -86,15 +86,17 @@ class Element extends Subject{
         }
         let putX = X;
         let putY = Y;
-
-        if (Y<0 || Y>height || X<0 || X>width){
-            putY=height/2
-            putX=width/2
-            this.safeSpriteVisible=false;
+        if (Y>-R && Y<height+R && X>-R && X<width+R ){
+            this.safeSpriteVisible=true;
         }
-        else{this.safeSpriteVisible=true;}
-        //console.log(this.safeSpriteVisible);
+        else{
+            if(Y<=-R || Y>=height+R){putY= (Y<=0) ? -R : height+R;}
+            if(X<=-R || X>=width+R ){putX= (X<=0) ? -R : width+R;}
+            this.safeSpriteVisible=false; 
+        }
         this.sprite.pos ={x:putX, y:putY};
+
+        
     }
     
     visibleChanger(toVisible){this.visible = toVisible};
