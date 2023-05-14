@@ -49,7 +49,7 @@ class Hub extends Building{
     this.IMGURL = '../elem/buildings/hub_new.png';
     this.settingImg ();
     this.invincible = true;
-    this.storage = [];
+    this.storage = {};
     // test element (delete!)
     //let layer1 = new Shape(['S', 'S', 'S', 'S'], ['u','y','p','w'])
     //this.queue.push(new Element([n, m], [layer1,0,0,0], this.dir));
@@ -67,7 +67,7 @@ class Hub extends Building{
   changeTileWidth(newTileWidth){
     this.tileWidth = 3.5*newTileWidth;
   }
-  movingElem(){2
+  movingElem(){
     if (this.queue.length){
       for (let element of this.queue){
         let layers = [...element.layers];
@@ -77,7 +77,12 @@ class Hub extends Building{
             layersStr.push([...layer.color, ...layer.shape].toString()) 
           }else {layersStr.push(0)};
       }
-        this.storage.push(layersStr.toString());
+        let data = layersStr.toString();
+        if (this.storage[data]){
+          this.storage[data]+=1;
+        } else{
+          this.storage[data] = 1
+        }
         //this.storage.push(layers.toString());
         this.queue.shift();
       }
