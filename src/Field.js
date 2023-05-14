@@ -20,7 +20,6 @@ class Field extends Subject{
             for (let j=-1; j<2; j++){
                 if (!(i==0 && j==0)){
                     this.insertBuilding([i, j], new HubInlet([i, j]));
-                    console.log('asdfsd')
                 }
             }
         }

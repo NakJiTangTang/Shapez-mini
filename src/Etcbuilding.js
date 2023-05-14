@@ -100,17 +100,18 @@ class Hub extends Building{
     }
 
     levelWorking(){
-      if(this.storage[this.levelTarget]>=this.levelAmount){
-        
+      let count  = this.storage[this.levelTarget];
+      if(!count){count= 0};
+      if(count>=this.levelAmount){
         console.log(this.level)
-        console.log("Clear!!")
-        console.log("Clear!!")
         this.level+=1;
-        console.log("Clear!!")
+        
+        this.levelLayer.sprite.text ="Clear!!"
         console.log(this.level);
         this.changeLevelLayer(this.level);
         this.storage = {};
       }
+      this.levelLayer.sprite.text = `${count} / ${this.levelAmount}`
     }
 
   changeLevelLayer(level){
@@ -137,6 +138,9 @@ class Hub extends Building{
     this.levelTarget = targets.toString();
     this.levelLayer = new Element([0, 0], layers, this.dir)
     this.levelLayer.movingPercent=50;
+    
+    
+
     this.levelLayer.subscribe (this)
   }
 

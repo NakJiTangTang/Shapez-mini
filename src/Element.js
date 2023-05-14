@@ -60,6 +60,15 @@ class Element extends Subject{
                         rotate(-i*90);
                     }}
                 }
+                if(this.sprite.text){
+                    noStroke()
+                    fill(100)
+                    textSize(this.tileWidth/5);
+                    textStyle(BOLD);
+                    textAlign(CENTER, CENTER);
+                    //console.log('adsfadsfds')
+                    text(this.sprite.text, 0, +this.tileWidth*2/5 )
+                }
                 pop();
                 //console.log(this.movingPercent);
             }
