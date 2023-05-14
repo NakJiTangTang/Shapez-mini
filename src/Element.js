@@ -91,7 +91,7 @@ class Element extends Subject{
         }
         else{
             if(Y<=-R || Y>=height+R){putY= (Y<=0) ? -R : height+R;}
-            if(X<=-R || X>=width+R ){putX= (X<=0) ? -R : width+R;}
+            if(X<=-R || X>=width+R ){putX= (X<=0) ? -R : width+R ;}
             this.safeSpriteVisible=false; 
         }
         this.sprite.pos ={x:putX, y:putY};
