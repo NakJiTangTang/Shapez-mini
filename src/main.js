@@ -4,7 +4,7 @@ import { FRAME_RATE, CANVAS_WIDTH,CANVAS_HEIGHT, BUILDING_MODE, DIR_LATTICE, FIE
 import { Field } from './Field.js';
 import { Belt} from './Building.js';
 import { Miner, Rotater} from './Etcbuilding.js';
-import {Counterpart, Cutter, Balancer} from './Dualbuilding.js';
+import {Counterpart, Cutter, Balancer, Painter} from './Dualbuilding.js';
 import { Element} from './Element.js';
 
 // Globals
@@ -111,12 +111,21 @@ function mousePressed() {
         newCounter = new Counterpart([n+DIR_LATTICE[dirIn][1], m-DIR_LATTICE[dirIn][0] ], [dirIn, dirIn], [n, m])
         newCounter.inletOK = true;
       }
-
-
-
       else if (buildingtype==BUILDING_MODE['rotater']){
         newBuilding = new Rotater([n, m], [dirIn, dirIn])
       }
+      else if (buildingtype==BUILDING_MODE['painter']){
+        //console.log('asdf')
+        console.log(DIR_LATTICE[dirIn]);
+        //console.log([DIR_LATTICE[dirIn][1], -DIR_LATTICE[dirIn][0] ]);
+        newBuilding = new Painter([n, m], [dirIn, dirIn], [n+DIR_LATTICE[dirIn][0], m+DIR_LATTICE[dirIn][1] ])
+        let dirChanger = {up:'right' , right: 'down', down:'left', left:'up'}
+        newCounter = new Counterpart([n+DIR_LATTICE[dirIn][0], m+DIR_LATTICE[dirIn][1] ], [dirChanger[dirIn], dirChanger[dirIn]], [n, m])
+        newCounter.inletOK = true;
+      }
+
+
+
       field.insertBuilding(newBuilding.lattice,  newBuilding); 
       if (newCounter){field.insertBuilding(newCounter.lattice,  newCounter); }
     }
@@ -230,6 +239,10 @@ function keyPressed() {
   if (key === '5') {
     console.log("Building mode: Balancer");
     buildingtype=BUILDING_MODE['balancer'];
+  }
+  if (key === '6') {
+    console.log("Building mode: Painter");
+    buildingtype=BUILDING_MODE['painter'];
   }
   //Ore test
   /*

@@ -33,7 +33,6 @@ class Counterpart extends Building {
       if (source == 'IsRootJamed' && (this.inselfLattice.toString()==others[0].toString())){
         // others: [slave lattice itself [n, m], loot.queueCounterJam, loot.queueJam]
         this.isJammed = (others[1] && others[2]);
-        console.log(this.isJammed);
       }
     
     
@@ -225,7 +224,71 @@ class Balancer extends Dualbuilding {
   }
 }
 
+class Painter extends Dualbuilding {
+  constructor([n, m], [dirIn, dirOut], [slaveN, slaveM]){
+    super([n, m], [dirIn, dirOut], [slaveN, slaveM])
+    this.nextLattice_counter = [n+2*DIR_LATTICE[dirIn][0], m+2*DIR_LATTICE[dirIn][1]]
+    this.type='painter';
+    this.IMGURL = '../elem/buildings/painter.png';
+    this.settingImg ();
+    this.color ='u';
+  }
+  newElem(newElement){
+    //console.log(this.queueJam, this.queueCounterJam);
+    this.queue.unshift(newElement);
+    newElement.sprite.remove()
+    newElement.sprite = 0;
+    if (this.color != 'u'){
+      for (let i = 0 ; i < 4; i++){ 
+        if(newElement.layers[i]){
+          newElement.layers[i].color = [this.color, this.color, this.color, this.color];
+        }
+      }
+      newElement.sprite = new Sprite(0, 0, ElEM_RADIUS_INT, ElEM_RADIUS_INT, 'static');
+      this.color = 'u'
+    }
+    this.queue[0].init(this.lattice, this.dir, this.tileWidth);
+    this.queue[0].visibleChanger(false)
+    newElement.subscribe(this);
+  }
+  newElemCounter(newElement){
+    newElement.visibleChanger(false)
+    if(newElement.layers[0].shape[0]=='Col'){
+      this.color = newElement.layers[0].color[0]
+    } else{this.color ='u'}
+
+    if(this.color == 'u'){
+      this.queueCounterJam=true;
+    } else{
+      this.queueCounterJam=false }
+  }
+  draw(){
+    let X = this.tileWidth*this.lattice[0];
+    let Y = -this.tileWidth*this.lattice[1];
+    if (this.imageSet){
+      translate(X,Y);  
+      rotate(DIR_VEC[this.dir[0]]*180-90)
+      image(this.imageSet, this.tileWidth/2, 0, this.tileWidth*2, this.tileWidth);
+      rotate(-DIR_VEC[this.dir[0]]*180+90)
+      translate(-X,-Y);
+    }
+    this.movingElem()
+    if (this.queueCounterJam && this.queueJam){
+      
+      this.isJammed=true}
+    else{ 
+      this.isJammed=false
+      if (this.twoOutOnly){
+        if(this.queueJam){this.queue.pop()}
+        if(this.queueCounterJam){this.queueCounter.pop()}
+      }
+    }
+
+}
 
 
 
-export {Counterpart, Cutter, Balancer}
+}
+
+
+export {Counterpart, Cutter, Balancer, Painter}
