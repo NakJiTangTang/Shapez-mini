@@ -9,6 +9,7 @@ import { Shape} from './Shape.js';
 class Building extends Subject{
     constructor([n, m], [dirIn, dirOut], isInv){
       super();  
+      this.type = ''
       this.queue = [];
       this.radius = ElEM_RADIUS_INT;
       this.imageSet = undefined;
@@ -105,14 +106,14 @@ class Building extends Subject{
     update(source, ...others){
       if (source == 'ElemReady'){
         // others: []
-        this.notifySubscribers('CheckNext', this.nextLattice, this.dir[1], this.lattice);
+        this.notifySubscribers('CheckNext', this.nextLattice, this.dir[1], this.lattice, this.type);
       }
       if (source == 'IsNotJam' && others[2].toString()==this.lattice.toString()){
-        // others: [bool, new [n, m], now [n, m]]
+        // others: [bool, new [n, m], now [n, m], next building type]
         if (this.nextLattice.toString()==others[1].toString()){
           if (others[0]){
             this.isJammed = false;
-            this.notifySubscribers('ElemTransferStart', this.queue.pop(), others[1]);
+            this.notifySubscribers('ElemTransferStart', this.queue.pop(), others[1] );
           }
           else{
             this.isJammed = true;
@@ -130,6 +131,7 @@ class Belt extends Building {
   constructor([n, m], [dirIn, dirOut]){
 
     super([n, m], [dirIn, dirOut]);
+    this.type = 'belt'
     //console.log(this.dirDelta());
     if (!(this.dirDelta())) this.IMGURL = '../elem/buildings/belt.png';
     else if (this.dirDelta()==0.5) this.IMGURL = '../elem/buildings/belt_right.png'
@@ -155,6 +157,7 @@ class Ore extends Building {
   constructor([n, m], ore){
     //Each ore will be: C, R, W, S, r, g, b
     super([n, m], ['up', 'up']);
+    this.type = 'ore'
     this.ore = ore;
     if (['C', 'R', 'W', 'S'].includes(ore)){
       this.layer = new Shape([ore,ore,ore,ore], ['u','u','u','u']);

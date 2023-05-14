@@ -7,6 +7,7 @@ class Miner extends Building {
     constructor([n, m], [dirIn, dirOut], Ore){
   
       super([n, m], [dirIn, dirOut]);
+      this.type='miner';
       //console.log(this.dirDelta());
       this.IMGURL = '../elem/buildings/miner.png';
       this.settingImg ();
@@ -36,8 +37,6 @@ class Miner extends Building {
             console.log('asdf')
             this.newElem(new Element(this.dir, [this.layer,0,0,0], this.dir))
         }
-        
-        
     }
 
   }

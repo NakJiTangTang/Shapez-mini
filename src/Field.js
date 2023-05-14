@@ -169,19 +169,28 @@ class Field extends Subject{
         };
         this.buildings[this.nmIntoIndex([n,m])]=0;
     }
+
     update(source, ...others){
         if (source == 'CheckNext'){
-            // others: [next lattice, previous dirOut, now lattice]
+            // others: [next lattice, previous dirOut, now lattice, type of previous]
             let buildingToSee = this.buildings[this.nmIntoIndex(others[0])]
+            let frombuilding = this.buildings[this.nmIntoIndex(others[2])]
+            let solution
             if (buildingToSee){
                 if(buildingToSee.dir[0]==others[1]){
                     //let sol = !buildingToSee.isJammed;
                     let sol = ((buildingToSee.queue[0])?buildingToSee.queue[0].movingPercent:100 )
-                    this.notifySubscribers('IsNotJam', sol>MIN_DIST, others[0], others[2]);
+                    solution =sol>MIN_DIST;
                 }
-                else{this.notifySubscribers('IsNotJam', false, others[0], others[2])}
+                else{solution = false}
             }
-            else{this.notifySubscribers('IsNotJam', false, others[0], others[2])}
+            else{solution = false}
+            if (buildingToSee.type =="miner"){
+                if(frombuilding.type !="miner"){
+                    solution = false
+                }
+            }
+            this.notifySubscribers('IsNotJam', solution, others[0], others[2], buildingToSee.type)
         }
         if (source == 'ElemTransferStart'){
             // others: [element, new [n, m]]
