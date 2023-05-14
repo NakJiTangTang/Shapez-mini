@@ -20,11 +20,13 @@ class Element extends Subject{
             this.positionSet();
             if(this.visible && this.safeSpriteVisible){
                 let R= this.tileWidth*ElEM_RADIUS_INT;
+                let dist = R*ElEM_RADIUS_RATIO;
                 push();
-                strokeWeight(this.tileWidth/30);
+                strokeWeight(this.tileWidth/50);
                 stroke(100);
                 fill(100);
                 ellipse(0, 0, R, R)
+                
                 for (let layer of this.layers){
                     if(layer){for (let i=0; i<4; i++){
                         fill(COLOR_PALET[layer.color[i]]);
@@ -60,7 +62,10 @@ class Element extends Subject{
                             layer.color[i] = '-';
                         }
                         rotate(-i*90);
-                    }}
+                        
+                    }
+                    R= R-dist;
+                }
                 }
                 if(this.sprite.text){
                     noStroke()

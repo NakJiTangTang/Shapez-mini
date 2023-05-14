@@ -8,7 +8,7 @@ export const MIN_DIST = 51;
 
 export const FONT_SIZE = 25;
 export const ElEM_RADIUS_INT = 0.4*0.5;
-export const ElEM_RADIUS_RATIO = 0.9;
+export const ElEM_RADIUS_RATIO = 0.2;
 export const CANVAS_WIDTH = 2000;
 export const CANVAS_HEIGHT = 1500;
 // Need to multiply PI
