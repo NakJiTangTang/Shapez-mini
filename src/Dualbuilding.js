@@ -52,7 +52,20 @@ class Dualbuilding extends Building {
         this.queueCounter[this.queueCounter.length-1].emit()
       }
     }
-
+    movingElem(){
+      function queueMove(que){
+        if (que.length){
+          for (let i=0;i<que.length-1; i++){
+            if(que[i+1].movingPercent-que[i].movingPercent>MIN_DIST){
+              que[i].move();
+            }
+          }
+          que[que.length-1].move();
+        }
+      }
+      queueMove(this.queue) 
+      queueMove(this.queueCounter)
+    }
 
 
     draw(){
@@ -86,7 +99,6 @@ class Dualbuilding extends Building {
       
       if (source == 'ElemReady'){
         // others: []
-        console.log('safdsdafasfdaasdf')
         this.notifySubscribers('CheckNext', this.nextLattice, this.dir[1], this.lattice, this.type);
         this.notifySubscribers('CheckNext', this.nextLattice_counter, this.dir[1], this.lattice, this.type);
       }
@@ -119,7 +131,6 @@ class Cutter extends Dualbuilding {
   constructor([n, m], [dirIn, dirOut], [slaveN, slaveM]){
     super([n, m], [dirIn, dirOut], [slaveN, slaveM])
     this.nextLattice_counter = [n+DIR_LATTICE[dirIn][1]+DIR_LATTICE[dirIn][0], m-DIR_LATTICE[dirIn][0]+DIR_LATTICE[dirIn][1]]
-    this.dual = true;
     this.type='cutter';
     this.IMGURL = '../elem/buildings/cutter.png';
     this.settingImg ();
@@ -153,21 +164,7 @@ class Cutter extends Dualbuilding {
 
     this.newElemCounter(counterSide);
   }
-  movingElem(){
-    function queueMove(que){
-      if (que.length){
-        for (let i=0;i<que.length-1; i++){
-          if(que[i+1].movingPercent-que[i].movingPercent>MIN_DIST){
-            que[i].move();
-          }
-        }
-        que[que.length-1].move();
-      }
-    }
-    queueMove(this.queue) 
-    queueMove(this.queueCounter)
-  }
-}
 
+}
 
 export {Counterpart, Cutter}

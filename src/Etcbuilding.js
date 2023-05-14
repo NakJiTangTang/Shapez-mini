@@ -40,7 +40,7 @@ class Miner extends Building {
         }
     }
 
-  }
+}
 
 class Hub extends Building{
   constructor(){
@@ -169,6 +169,15 @@ class HubInlet extends Building{
      }
     }
 }
+class Rotater extends Building {
+  constructor([n, m], [dirIn, dirOut]){
 
+    super([n, m], [dirIn, dirOut]);
+    this.type='rotater';
+    //console.log(this.dirDelta());
+    this.IMGURL = '../elem/buildings/rotater.png';
+    this.settingImg ();
+  }
+}
 
-  export { Miner, Hub, HubInlet}
+  export { Miner, Hub, HubInlet, Rotater}

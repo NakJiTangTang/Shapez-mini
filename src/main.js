@@ -3,7 +3,7 @@ import '../css/style.css';
 import { FRAME_RATE, CANVAS_WIDTH,CANVAS_HEIGHT, BUILDING_MODE, DIR_LATTICE, FIELD_HEIGHT, FIELD_WIDTH, REF_SPEED } from './Constants.js';
 import { Field } from './Field.js';
 import { Belt} from './Building.js';
-import { Miner} from './Etcbuilding.js';
+import { Miner, Rotater} from './Etcbuilding.js';
 import {Counterpart, Cutter} from './Dualbuilding.js';
 import { Element} from './Element.js';
 
@@ -103,6 +103,9 @@ function mousePressed() {
         newCounter = new Counterpart([n+DIR_LATTICE[dirIn][1], m-DIR_LATTICE[dirIn][0] ], [dirIn, dirIn], [n, m])
         newCounter.inletOK = false;
       }
+      else if (buildingtype==BUILDING_MODE['rotater']){
+        newBuilding = new Rotater([n, m], [dirIn, dirIn])
+      }
       field.insertBuilding(newBuilding.lattice,  newBuilding); 
       if (newCounter){field.insertBuilding(newCounter.lattice,  newCounter); }
     }
@@ -122,7 +125,8 @@ function vectorSum([a, b], [c, d]) {return [a+c, b+d]};
 function mouseDragged(event) {
   //console.log([event.movementX, event.movementY]);
   let nowLattice = field.clickedLattice(mouseX, mouseY)
-  if (abs(nowLattice[0])>=2||abs(nowLattice[1])>=2 && canEdit && noErase && isInCanvas(mouseX, mouseY)){
+  if(!canEdit) {field.drag(event.movementX, event.movementY);}
+  else if ((abs(nowLattice[0])>=2||abs(nowLattice[1])>=2) && noErase && isInCanvas(mouseX, mouseY)){
     if (!tempLattice){
       tempLattice = nowLattice;
     }
@@ -156,15 +160,15 @@ function mouseDragged(event) {
       }
     }
   }
-  else if((abs(nowLattice[0])>=2||abs(nowLattice[1])>=2) && canEdit && isInCanvas(mouseX, mouseY)) {
+  else if((abs(nowLattice[0])>=2||abs(nowLattice[1])>=2) && isInCanvas(mouseX, mouseY)) {
     field.deleteBuilding(tempLattice);
     field.deleteBuilding(nowLattice);
     tempLattice=nowLattice;
   }
-  else if (canEdit && (abs(nowLattice[0])<=2&&abs(nowLattice[1])<=2)){
+  //else if (canEdit && (abs(nowLattice[0])<=2&&abs(nowLattice[1])<=2)){
  
-  }
-  else {field.drag(event.movementX, event.movementY);}
+  //}
+  
 }
 
 
@@ -207,6 +211,10 @@ function keyPressed() {
     console.log("Building mode: Cutter");
     buildingtype=BUILDING_MODE['cutter'];
     //console.log(buildingtype);
+  }
+  if (key === '4') {
+    console.log("Building mode: Rotater");
+    buildingtype=BUILDING_MODE['rotater'];
   }
   //Ore test
   /*
