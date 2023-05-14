@@ -145,10 +145,11 @@ function vectorSum([a, b], [c, d]) {return [a+c, b+d]};
 function mouseDragged(event) {
   //console.log([event.movementX, event.movementY]);
   let nowLattice = field.clickedLattice(mouseX, mouseY)
-  if(!canEdit) {field.drag(event.movementX, event.movementY);}
   if (!tempLattice){
     tempLattice = nowLattice;
   }
+  if(!canEdit) {field.drag(event.movementX, event.movementY);}
+  
   else if (noErase && isInCanvas(mouseX, mouseY)){
     
     let diffLattice = [nowLattice[0]-tempLattice[0], nowLattice[1]-tempLattice[1]]
