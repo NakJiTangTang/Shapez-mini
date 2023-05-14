@@ -50,8 +50,8 @@ let dirIn
 //let oreIndex = 0;
 function mousePressed() {
   let newBuilding;
-  if (canEdit && isInCanvas(mouseX, mouseY)){
-    let [n, m] = field.clickedLattice(mouseX, mouseY);
+  let [n, m] = field.clickedLattice(mouseX, mouseY);
+  if (n && canEdit && isInCanvas(mouseX, mouseY) && !(field.nmIntoIndex([n, m]).invincible)){
     if (noErase){
       //Add building
       //basic direction (starting point)
@@ -82,8 +82,11 @@ function vectorSum([a, b], [c, d]) {return [a+c, b+d]};
 
 function mouseDragged(event) {
   //console.log([event.movementX, event.movementY]);
-  if (canEdit && noErase && isInCanvas(mouseX, mouseY)){
-    let nowLattice = field.clickedLattice(mouseX, mouseY)
+  let nowLattice = field.clickedLattice(mouseX, mouseY)
+  if (nowLattice[0] && canEdit && noErase && isInCanvas(mouseX, mouseY)){
+    if (!tempLattice){
+      tempLattice = nowLattice;
+    }
     let diffLattice = [nowLattice[0]-tempLattice[0], nowLattice[1]-tempLattice[1]]
     let newBuilding;
 
@@ -114,8 +117,7 @@ function mouseDragged(event) {
     
 
   }
-  else if(canEdit && isInCanvas(mouseX, mouseY)) {
-    let nowLattice = field.clickedLattice(mouseX, mouseY)
+  else if(nowLattice[0] && canEdit && isInCanvas(mouseX, mouseY)) {
     field.deleteBuilding(tempLattice);
     field.deleteBuilding(nowLattice);
     tempLattice=nowLattice;

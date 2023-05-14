@@ -103,17 +103,17 @@ class Field extends Subject{
         }
         noStroke();
     }
-    makeLattice(point , ref){
-        let varience = (point - ref)/(this.tileWidthIs()/2);
-        let lattice= (varience>=0?1:(-1)) * floor(( floor(abs(varience)) + 1)/2);
-        if (lattice == -0) lattice = 0; 
-        return lattice;
-    }
     //MouseX, Y into [n, m]
     clickedLattice(pointX, pointY){
-        let lattice = [this.makeLattice(pointX, this.viewX), -1 * this.makeLattice(pointY, this.viewY)]
+        function makeLattice(point , ref, tilewidth){
+            let varience = (point - ref)/(tilewidth/2);
+            let lattice= (varience>=0?1:(-1)) * floor(( floor(abs(varience)) + 1)/2);
+            if (lattice == -0) lattice = 0; 
+            return lattice;
+        }
+        let lattice = [makeLattice(pointX, this.viewX, this.tileWidthIs()), -1 * makeLattice(pointY, this.viewY, this.tileWidthIs())]
         for (let lat of lattice) {
-            if (abs(lat)>FIELD_HEIGHT/2){return null;};
+            if (abs(lat)>FIELD_HEIGHT/2){return [null, null];};
         }
         //console.log(lattice)
         return lattice;

@@ -41,9 +41,34 @@ class Miner extends Building {
 
   }
 
+class Hub extends Building{
+  constructor(){
+  
+    super([0, 0], ['up', 'up']);
+    this.type='hub';
+    //console.log(this.dirDelta());
+    this.IMGURL = '../elem/buildings/hub.new.png';
+    this.settingImg ();
+    this.invincible = true;
+    this.storage = [];
+    
+    // test element (delete!)
+    //let layer1 = new Shape(['S', 'S', 'S', 'S'], ['u','y','p','w'])
+    //this.queue.push(new Element([n, m], [layer1,0,0,0], this.dir));
+    //this.queue[0].subscribe (this)
+    console.log(this.queue);
+  }
+  changeTileWidth(newTileWidth){
+    this.tileWidth = 3*newTileWidth;
+    for (let element of this.queue){
+      element.tileWidth = 0;
+    }
+  }
+}
+
+class HubInlet extends Building{
+
+}
 
 
-
-
-
-  export { Miner }
+  export { Miner, Hub, HubInlet}
