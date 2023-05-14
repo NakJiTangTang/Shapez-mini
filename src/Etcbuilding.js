@@ -104,7 +104,8 @@ class Hub extends Building{
       if(!count){count= 0};
       if(count>=this.levelAmount){
         console.log(this.level)
-        this.level+=1;
+
+        (Levels.length-1>this.level)?(this.level+=1):(this.level=0)
         
         this.levelLayer.sprite.text ="Clear!!"
         console.log(this.level);
@@ -177,6 +178,27 @@ class Rotater extends Building {
     //console.log(this.dirDelta());
     this.IMGURL = '../elem/buildings/rotater.png';
     this.settingImg ();
+  }
+  rotateElement(newElement){
+    let afterRotate;
+    afterRotate = new Element (newElement.inWhere, [0,0,0,0], newElement.buildingDir);
+    afterRotate.visible=false;
+    for (let i=0 ; i<4; i++){ 
+      if(newElement.layers[i]){
+        afterRotate.layers[i] = new Shape ([newElement.layers[i].shape[3], newElement.layers[i].shape[0], newElement.layers[i].shape[1], newElement.layers[i].shape[2]],
+                                          [newElement.layers[i].color[3], newElement.layers[i].color[0], newElement.layers[i].color[1], newElement.layers[i].color[2]])
+      }
+    }
+    newElement.sprite.remove()
+    return afterRotate;
+  }
+  newElem(newElement){
+    let afterRotate = this.rotateElement(newElement)
+    
+    this.queue.unshift(afterRotate);
+    this.queue[0].init(this.lattice, this.dir, this.tileWidth);
+    this.queue[0].visibleChanger(false)
+    afterRotate.subscribe(this);
   }
 }
 
