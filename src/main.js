@@ -4,7 +4,7 @@ import { FRAME_RATE, CANVAS_WIDTH,CANVAS_HEIGHT, BUILDING_MODE, DIR_LATTICE, FIE
 import { Field } from './Field.js';
 import { Belt} from './Building.js';
 import { Miner, Rotater} from './Etcbuilding.js';
-import {Counterpart, Cutter, Balancer, Painter} from './Dualbuilding.js';
+import {Counterpart, Cutter, Balancer, Painter, Stacker} from './Dualbuilding.js';
 import { Element} from './Element.js';
 
 // Globals
@@ -123,11 +123,20 @@ function mousePressed() {
         newCounter = new Counterpart([n+DIR_LATTICE[dirIn][0], m+DIR_LATTICE[dirIn][1] ], [dirChanger[dirIn], dirChanger[dirIn]], [n, m])
         newCounter.inletOK = true;
       }
+      else if (buildingtype==BUILDING_MODE['stacker']){
+        //console.log('asdf')
+        console.log(DIR_LATTICE[dirIn]);
+        //console.log([DIR_LATTICE[dirIn][1], -DIR_LATTICE[dirIn][0] ]);
+        newBuilding = new Stacker([n, m], [dirIn, dirIn], [n+DIR_LATTICE[dirIn][1], m-DIR_LATTICE[dirIn][0] ])
+        newCounter = new Counterpart([n+DIR_LATTICE[dirIn][1], m-DIR_LATTICE[dirIn][0] ], [dirIn, dirIn], [n, m])
+        newCounter.inletOK = true;
+      }
 
-
-
+      field.deleteBuilding(newBuilding.lattice); 
       field.insertBuilding(newBuilding.lattice,  newBuilding); 
-      if (newCounter){field.insertBuilding(newCounter.lattice,  newCounter); }
+      if (newCounter){
+        field.deleteBuilding(newCounter.lattice); 
+        field.insertBuilding(newCounter.lattice,  newCounter); }
     }
     else {
       field.deleteBuilding([n, m]);
@@ -219,7 +228,6 @@ function keyPressed() {
   if (key === 'r' || key === 'R') {
     console.log("rotate building CW");
     (dirInIndex>=3)?(dirInIndex=0) : (dirInIndex++);
-    //console.log(dirInIndex);
   }
   if (key === '1' || key === 'b'|| key === 'B') {
     console.log("Building mode: Belt");
@@ -228,12 +236,10 @@ function keyPressed() {
   if (key === '2') {
     console.log("Building mode: Miner");
     buildingtype=BUILDING_MODE['miner'];
-    //console.log(buildingtype);
   }
   if (key === '3') {
     console.log("Building mode: Cutter");
     buildingtype=BUILDING_MODE['cutter'];
-    //console.log(buildingtype);
   }
   if (key === '4') {
     console.log("Building mode: Rotater");
@@ -246,6 +252,10 @@ function keyPressed() {
   if (key === '6') {
     console.log("Building mode: Painter");
     buildingtype=BUILDING_MODE['painter'];
+  }
+  if (key === '7') {
+    console.log("Building mode: Stacker");
+    buildingtype=BUILDING_MODE['stacker'];
   }
   //Ore test
   /*
