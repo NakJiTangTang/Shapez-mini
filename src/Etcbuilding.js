@@ -83,7 +83,7 @@ class Hub extends Building{
         //this.storage.push(layers.toString());
         this.queue.shift();
       }
-      //console.log(this.storage);
+      console.log(this.storage);
     }
     this.levelWorking();
   }

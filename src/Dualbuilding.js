@@ -310,22 +310,30 @@ class Stacker extends Dualbuilding {
     // Layer2: from counterpart
     function CanMerge(layers1, layers2){
       if (!(layers2)) return true;
-      //console.log("errorch1")
       for (let i=0 ; i<4; i++){ 
-        console.log(layers1[i], layers2[i])
+        //console.log(layers1[i], layers2[i])
         if(layers1[i]  && layers2[i]){
           let shape1 = layers1[i].shape;
           let shape2 = layers2[i].shape;
           for (let j=0 ; j<4; j++){ 
             if((shape1[j]!='-') && (shape2[j]!='-')){
-              //console.log("errorch2")
               return false;
               
       }}}}
-      //console.log("errorch3")
+
       return true
-      
     }
+    function CanStack(layers1, layers2){
+      if (!(layers2)) return true;
+      let count = 0;
+      for (let i=0 ; i<4; i++){ 
+        if (layers1[i]) count ++;
+        if (layers2[i]) count ++; 
+      }
+      if (count>4) return false;
+      return true
+    }
+
     //Merge
     if (CanMerge(newElement.layers, this.toStack)){
       console.log('merging')
@@ -362,6 +370,20 @@ class Stacker extends Dualbuilding {
         }
         this.toStack = [0, 0, 0, 0];
       }
+    }else if (CanStack (newElement.layers, this.toStack)){
+      console.log('stacking')
+      let index =0;
+      for (let i=0 ; i<4; i++){
+        if(newElement.layers[i]){
+          originSide.layers[index] = new Shape(newElement.layers[i].shape, newElement.layers[i].color)
+          index++
+      }}
+      for (let i=0 ; i<4; i++){
+        if(this.toStack[i]){
+          originSide.layers[index] = new Shape(this.toStack[i].shape, this.toStack[i].color)
+          index++
+      }}
+      this.toStack = [0, 0, 0, 0];
     }
 
     newElement.sprite.remove();
