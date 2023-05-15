@@ -171,7 +171,8 @@ function mouseDragged(event) {
             field.insertBuilding(tempLattice,  newBuilding); 
           };
         }
-        if (abs(nowLattice[0])>=2||abs(nowLattice[1])>=2){
+        if ((abs(nowLattice[0])>=2||abs(nowLattice[1])>=2) 
+            && (!(field.takeType(nowLattice))|| field.takeType(nowLattice)=='belt')){
           newBuilding = new Belt(nowLattice, [dirOut, dirOut])
           field.deleteBuilding(nowLattice);
           field.insertBuilding(nowLattice,  newBuilding);  

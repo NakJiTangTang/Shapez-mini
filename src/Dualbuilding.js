@@ -184,7 +184,8 @@ class Cutter extends Dualbuilding {
 class Balancer extends Dualbuilding {
   constructor([n, m], [dirIn, dirOut], [slaveN, slaveM]){
     super([n, m], [dirIn, dirOut], [slaveN, slaveM])
-    this.nextLattice_counter = [n+DIR_LATTICE[dirIn][1]+DIR_LATTICE[dirIn][0], m-DIR_LATTICE[dirIn][0]+DIR_LATTICE[dirIn][1]]
+    this.nextLattice_counter = [n+DIR_LATTICE[dirIn][1]+DIR_LATTICE[dirIn][0], 
+                                m-DIR_LATTICE[dirIn][0]+DIR_LATTICE[dirIn][1]]
     this.type='balancer';
     this.IMGURL = '../elem/buildings/balancer.png';
     this.settingImg ();
@@ -257,18 +258,13 @@ class Painter extends Dualbuilding {
     this.queue[0].init(this.lattice, this.dir, this.tileWidth);
     this.queue[0].visibleChanger(false)
     originSide.subscribe(this);
-
-
-
   }
   newElemCounter(newElement){
     newElement.visibleChanger(false)
     if(newElement.layers[0].shape[0]=='Col'){
       this.color = newElement.layers[0].color[0]
     } else{this.color ='u'}
-    
     if(this.color == 'u'){
-      
       this.queueCounterJam=true;
     } else{
       this.queueCounterJam=false }
@@ -294,12 +290,53 @@ class Painter extends Dualbuilding {
         if(this.queueCounterJam){this.queueCounter.pop()}
       }
     }
-
+  }
 }
 
-
-
+class Stacker extends Dualbuilding {
+  constructor([n, m], [dirIn, dirOut], [slaveN, slaveM]){
+    super([n, m], [dirIn, dirOut], [slaveN, slaveM])
+    this.nextLattice_counter = [n+DIR_LATTICE[dirIn][1]+DIR_LATTICE[dirIn][0], 
+                                m-DIR_LATTICE[dirIn][0]+DIR_LATTICE[dirIn][1]]
+    this.type='stacker';
+    this.IMGURL = '../elem/buildings/stacker.png';
+    this.settingImg ();
+  }
+  newElem(newElement){
+    let originSide;
+    originSide = new Element (newElement.inWhere, [0,0,0,0], newElement.buildingDir);
+    originSide.visible=false;
+    for (let i=0 ; i<4; i++){ 
+      if(newElement.layers[i]){
+        originSide.layers[i] = new Shape ([newElement.layers[i].shape[0], newElement.layers[i].shape[1], newElement.layers[i].shape[2], newElement.layers[i].shape[3]],
+                                          [newElement.layers[i].color[0], newElement.layers[i].color[1], newElement.layers[i].color[2], newElement.layers[i].color[3]])
+      }
+    }
+    if (this.color != 'u'){
+      for (let i = 0 ; i < 4; i++){ 
+        if(originSide.layers[i]){
+          originSide.layers[i].color = [this.color, this.color, this.color, this.color];
+        }
+      }
+      this.color = 'u'
+    }
+    
+    newElement.sprite.remove();
+    this.queue.unshift(originSide);
+    this.queue[0].init(this.lattice, this.dir, this.tileWidth);
+    this.queue[0].visibleChanger(false)
+    originSide.subscribe(this);
+  }
+  newElemCounter(newElement){
+    newElement.visibleChanger(false)
+    if(newElement.layers[0].shape[0]=='Col'){
+      this.color = newElement.layers[0].color[0]
+    } else{this.color ='u'}
+    if(this.color == 'u'){
+      this.queueCounterJam=true;
+    } else{
+      this.queueCounterJam=false }
+  }
 }
 
-
-export {Counterpart, Cutter, Balancer, Painter}
+export {Counterpart, Cutter, Balancer, Painter, Stacker}
