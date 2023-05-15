@@ -301,40 +301,85 @@ class Stacker extends Dualbuilding {
     this.type='stacker';
     this.IMGURL = '../elem/buildings/stacker.png';
     this.settingImg ();
+    this.toStack = [0, 0, 0, 0];
   }
   newElem(newElement){
     let originSide;
     originSide = new Element (newElement.inWhere, [0,0,0,0], newElement.buildingDir);
     originSide.visible=false;
-    for (let i=0 ; i<4; i++){ 
-      if(newElement.layers[i]){
-        originSide.layers[i] = new Shape ([newElement.layers[i].shape[0], newElement.layers[i].shape[1], newElement.layers[i].shape[2], newElement.layers[i].shape[3]],
-                                          [newElement.layers[i].color[0], newElement.layers[i].color[1], newElement.layers[i].color[2], newElement.layers[i].color[3]])
-      }
+    // Layer2: from counterpart
+    function CanMerge(layers1, layers2){
+      if (!(layers2)) return true;
+      //console.log("errorch1")
+      for (let i=0 ; i<4; i++){ 
+        console.log(layers1[i], layers2[i])
+        if(layers1[i]  && layers2[i]){
+          let shape1 = layers1[i].shape;
+          let shape2 = layers2[i].shape;
+          for (let j=0 ; j<4; j++){ 
+            if((shape1[j]!='-') && (shape2[j]!='-')){
+              //console.log("errorch2")
+              return false;
+              
+      }}}}
+      //console.log("errorch3")
+      return true
+      
     }
-    if (this.color != 'u'){
-      for (let i = 0 ; i < 4; i++){ 
-        if(originSide.layers[i]){
-          originSide.layers[i].color = [this.color, this.color, this.color, this.color];
+    //Merge
+    if (CanMerge(newElement.layers, this.toStack)){
+      console.log('merging')
+      for (let i=0 ; i<4; i++){ 
+        if(newElement.layers[i] || this.toStack[i]){
+
+          let shape = []
+          let color = []
+            if(newElement.layers[i]==0 || this.toStack[i]==0){
+              let whole = ((newElement.layers[i])?(newElement.layers[i]):(this.toStack[i]))
+              //console.log(newElement.layers[i], this.toStack[i])
+              if (whole){
+                shape = whole.shape;
+                color = whole.color;
+            } 
+          }
+          else{
+            for (let j=0 ; j<4; j++){ 
+              let newPart = newElement.layers[i].shape[j];
+              let couPart = this.toStack[i].shape[j];
+              console.log(newPart, couPart);
+              if (newPart=='-'  && couPart =='-'){
+                shape.push('-');
+                color.push('-');
+              } else{
+                shape.push(((newPart != '-')? newPart: couPart))
+                color.push(((newPart != '-')? newElement.layers[i].color[j]: this.toStack[i].color[j]))    
+              }
+              
+            }
+          }
+          //console.log(shape, color)
+          originSide.layers[i] = new Shape(shape, color)
         }
+        this.toStack = [0, 0, 0, 0];
       }
-      this.color = 'u'
     }
-    
+
     newElement.sprite.remove();
     this.queue.unshift(originSide);
+    
     this.queue[0].init(this.lattice, this.dir, this.tileWidth);
     this.queue[0].visibleChanger(false)
+    //console.log(this.queue[0]);
     originSide.subscribe(this);
   }
   newElemCounter(newElement){
+    
     newElement.visibleChanger(false)
+    newElement.sprite.remove();
     if(newElement.layers[0].shape[0]=='Col'){
-      this.color = newElement.layers[0].color[0]
-    } else{this.color ='u'}
-    if(this.color == 'u'){
-      this.queueCounterJam=true;
+      this.queueCounterJam=true
     } else{
+      this.toStack = newElement.layers
       this.queueCounterJam=false }
   }
 }
