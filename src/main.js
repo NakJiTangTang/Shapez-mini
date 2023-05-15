@@ -169,14 +169,18 @@ function mouseDragged(event) {
         if (abs(diffLattice[0])) (diffLattice[0]>0)?(dirOut='right'):(dirOut='left');
         else if (abs(diffLattice[1])) (diffLattice[1]>0)?(dirOut='up'):(dirOut='down');
         
-        field.deleteBuilding(tempLattice);
+        let originType = field.takeType(tempLattice);
+        console.log(originType);
+        
         try{
           newBuilding = new Belt(tempLattice, [dirIn, dirOut])
+          field.deleteBuilding(tempLattice);
           field.insertBuilding(tempLattice,  newBuilding); 
         }catch(event){
-          if(event=='comeback error'){
+          if(event=='comeback error' && (!(originType)|| originType=='belt')){
             dirIn=dirOut;
             newBuilding = new Belt(tempLattice, [dirOut, dirOut])
+            field.deleteBuilding(tempLattice);
             field.insertBuilding(tempLattice,  newBuilding); 
           };
         }
