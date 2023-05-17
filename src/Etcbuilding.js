@@ -7,22 +7,14 @@ import Levels from './Level.json'
 
 class Miner extends Building {
     constructor([n, m], [dirIn, dirOut], Ore){
-  
       super([n, m], [dirIn, dirOut]);
       this.type='miner';
-      //console.log(this.dirDelta());
       this.IMGURL = '../elem/buildings/miner.png';
       this.settingImg ();
       if(Ore){
         this.layer =Ore.layer;
         this.newElem(new Element([n, m], [this.layer,0,0,0], this.dir))
       }
-      
-      // test element (delete!)
-      //let layer1 = new Shape(['S', 'S', 'S', 'S'], ['u','y','p','w'])
-      //this.queue.push(new Element([n, m], [layer1,0,0,0], this.dir));
-      //this.queue[0].subscribe (this)
-      //console.log(this.queue);
     }
     draw(){
         let X = this.tileWidth*this.lattice[0];
@@ -39,14 +31,12 @@ class Miner extends Building {
             this.newElem(new Element(this.dir, [this.layer,0,0,0], this.dir))
         }
     }
-
 }
 
 class Hub extends Building{
   constructor(){
     super([0, 0], ['up', 'up']);
     this.type='hub';
-    //console.log(this.dirDelta());
     this.IMGURL = '../elem/buildings/hub_new.png';
     this.settingImg ();
     this.invincible = true;
@@ -62,7 +52,6 @@ class Hub extends Building{
     this.queue[0].init(this.lattice, this.dir, this.tileWidth);
     this.queue[0].visibleChanger(false)
     newElement.subscribe(this);
-    
   } 
   movingElem(){
     if (this.queue.length){
@@ -73,14 +62,13 @@ class Hub extends Building{
           if(layer){
             layersStr.push([...layer.color, ...layer.shape].toString()) 
           }else {layersStr.push(0)};
-      }
+        }
         let data = layersStr.toString();
         if (this.storage[data]){
           this.storage[data]+=1;
         } else{
           this.storage[data] = 1
         }
-        //this.storage.push(layers.toString());
         this.queue.shift();
       }
       console.log(this.storage);
@@ -88,30 +76,29 @@ class Hub extends Building{
     this.levelWorking();
   }
    
-    changeTileWidth(newTileWidth){
-      this.tileWidth = 3.5*newTileWidth;
-      this.shapeWidth =2*  newTileWidth;
-      this.levelLayer.tileWidth = this.shapeWidth;
-    }
-    
-    dragWithElement(refX, refY){
-      this.levelLayer.tileWidth = this.shapeWidth  
-      this.levelLayer.inRef = [refX, refY];
-    }
+  changeTileWidth(newTileWidth){
+    this.tileWidth = 3.5*newTileWidth;
+    this.shapeWidth =2*  newTileWidth;
+    this.levelLayer.tileWidth = this.shapeWidth;
+  }
+  
+  dragWithElement(refX, refY){
+    this.levelLayer.tileWidth = this.shapeWidth  
+    this.levelLayer.inRef = [refX, refY];
+  }
 
-    levelWorking(){
-      let count  = this.storage[this.levelTarget];
-      if(!count){count= 0};
-      if(count>=this.levelAmount){
-        console.log(this.level);
-
-        ((Levels.length-1)>this.level)?(this.level+=1):(this.level=0)
-        console.log(this.level);
-        this.changeLevelLayer(this.level);
-        this.storage = {};
-      }    
-      this.levelLayer.sprite.text = `Level ${this.level}\n\n${count} / ${this.levelAmount}`
-    }
+  levelWorking(){
+    let count  = this.storage[this.levelTarget];
+    if(!count){count= 0};
+    if(count>=this.levelAmount){
+      console.log(this.level);
+      ((Levels.length-1)>this.level)?(this.level+=1):(this.level=0)
+      console.log(this.level);
+      this.changeLevelLayer(this.level);
+      this.storage = {};
+    }    
+    this.levelLayer.sprite.text = `Level ${this.level}\n\n${count} / ${this.levelAmount}`
+  }
 
   changeLevelLayer(level){
     if (this.levelLayer){
@@ -137,9 +124,6 @@ class Hub extends Building{
     this.levelTarget = targets.toString();
     this.levelLayer = new Element([0, 0], layers, this.dir)
     this.levelLayer.movingPercent=50;
-    
-    
-
     this.levelLayer.subscribe (this)
   }
 
@@ -170,10 +154,8 @@ class HubInlet extends Building{
 }
 class Rotater extends Building {
   constructor([n, m], [dirIn, dirOut]){
-
     super([n, m], [dirIn, dirOut]);
     this.type='rotater';
-    //console.log(this.dirDelta());
     this.IMGURL = '../elem/buildings/rotater.png';
     this.settingImg ();
   }
@@ -199,5 +181,4 @@ class Rotater extends Building {
     afterRotate.subscribe(this);
   }
 }
-
-  export { Miner, Hub, HubInlet, Rotater}
+export { Miner, Hub, HubInlet, Rotater}

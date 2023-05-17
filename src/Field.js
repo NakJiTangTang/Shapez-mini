@@ -23,20 +23,15 @@ class Field extends Subject{
                 }
             }
         }
-
         this.insertBuilding([0, 0], new Hub());
-        //this.peekBuilding = new Building([0,0], 'up')
     }
     
     saveOreList(){
         save(this.Orelist, "OreList.json");
-        //localStorage.setItem("OreList", JSON.stringify(this.Orelist));
     }
     loadOreList(){
-        //const data = localStorage.getItem("OreList");
         this.Orelist=list;
         if(this.Orelist){
-            //this.Orelist = JSON.parse(data);
             for (let i=0;i<this.Orelist.length;i++){ 
                 if (this.Orelist[i]){
                     this.insertOre(this.indexIntoNM(i), this.Orelist[i])}
@@ -45,13 +40,10 @@ class Field extends Subject{
     }
     initOreList(){this.Orelist = new Array(this.fieldH*this.fieldW);}
     
-    tileWidthIs(){
-        return width / this.viewNum;
-    }
+    tileWidthIs(){return width / this.viewNum;}
     draw(){
         const tileWidth = this.tileWidthIs()
         this.drawGrid(tileWidth);
-
         translate(this.viewX, this.viewY);
         rectMode(CENTER);
         for (let i=0;i<this.Ores.length;i++){ 
@@ -65,7 +57,7 @@ class Field extends Subject{
                 }else {this.Ores[i].queue[0].visibleChanger(true);}
             }
         }
-
+        // Images will : belt in lowest - other buildings - elements
         for (let building of this.buildings){ 
             if (building && building.type=='belt'){
                 building.draw()
@@ -84,7 +76,6 @@ class Field extends Subject{
             }
         }
         translate(-this.viewX, -this.viewY);
-        //this.drawPeek(tileWidth)
     }
     //Under consideration to implement
     drawPeek(tileWidth){
@@ -128,15 +119,12 @@ class Field extends Subject{
         for (let lat of lattice) {
             if (abs(lat)>FIELD_HEIGHT/2){return [null, null];};
         }
-        //console.log(lattice)
         return lattice;
     }
     magnify(scrollDir){
-
         if (this.viewNum>8 && scrollDir<0) { this.viewNum = this.viewNum*0.8; }
         else if (this.viewNum<30 && scrollDir> 0){this.viewNum = this.viewNum*1.25;}
         else {this.viewNum = this.viewNum }
-
         for (let ore of this.Ores){ 
             if (ore){ore.changeTileWidth(this.tileWidthIs());}
         }
@@ -145,7 +133,6 @@ class Field extends Subject{
                 building.changeTileWidth(this.tileWidthIs());
             }
         }
-        
     }
     drag(dragDirX, dragDirY){
         this.viewX+=dragDirX;
@@ -182,7 +169,6 @@ class Field extends Subject{
     deleteBuilding([n, m]){
         let building = this.buildings[this.nmIntoIndex([n,m])];
         if (building){
-            //console.log(building.latticeCounter)
             if (building.type=='counterpart'){
                 let originBuilding = this.buildings[this.nmIntoIndex(building.root)];
                 originBuilding.delElemAll();
@@ -202,7 +188,6 @@ class Field extends Subject{
                 this.unsubscribe(building);
                 building.unsubscribeAll();
             }
-            
         };
         this.buildings[this.nmIntoIndex([n,m])]=0;
     }
@@ -215,7 +200,6 @@ class Field extends Subject{
             let solution
             if (buildingToSee){
                 if(buildingToSee.dir[0]==others[1]){
-                    //let sol = !buildingToSee.isJammed;
                     let sol = ((buildingToSee.queue[0])?buildingToSee.queue[0].movingPercent:100 )
                     solution =sol>MIN_DIST;
                 }
@@ -243,13 +227,11 @@ class Field extends Subject{
         }
         if (source == 'CounterpartElem'){
             // others: [element, root [rootN, rootM], lattice itself [n, m]]
-            
             let loot = this.buildings[this.nmIntoIndex(others[1])];
             //console.log(others[2].toString());
             if (loot.dual && others[0] && (loot.latticeCounter.toString()==others[2].toString())){
                 loot.newElemCounter(others[0]);
             }
-
             // others: [slave lattice itself [n, m], loot.queueCounterJam, loot.queueJam]
             this.notifySubscribers('IsRootJamed', others[2], loot.queueCounterJam, loot.queueJam)
         }

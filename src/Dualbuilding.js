@@ -1,43 +1,37 @@
 import {Building} from './Building.js'
 import {Element} from './Element.js'
 import {Shape} from './Shape.js'
-import {MIN_DIST, REF_SPEED, ElEM_RADIUS_INT, DIR_VEC, DIR_LATTICE} from './Constants.js';
+import {MIN_DIST, DIR_VEC, DIR_LATTICE} from './Constants.js';
 
 class Counterpart extends Building {
-    constructor([n, m], [dirIn, dirOut], [rootN, rootM]){
-      super([n, m], [dirIn, dirOut]);
-      this.isJammed = false;
-      this.inletOK = true;
-      this.type='counterpart';
-      this.root = [rootN, rootM]
-      //console.log(this.dirDelta());
-      this.settingImg ();
-      this.inselfLattice=[n, m]
-    }
-    settingImg(){};
-    movingElem(){
-      if (this.queue.length && !(this.isJammed)){
-            for (let i=0;i<this.queue.length; i++){
-              //console.log('CounterpartElem',this.queue.pop(), this.root , this.dir)  
-              //console.log(this.observers);
-              this.notifySubscribers('CounterpartElem', this.queue.pop(), this.root , this.inselfLattice );
-            }
-        }
-        else {this.notifySubscribers('CounterpartElem', 0, this.root , this.inselfLattice );}
-    }
-    update(source, ...others){
-      if (source == 'ElemReady'){
-        // others: []
-        this.notifySubscribers('CheckNext', this.nextLattice, this.dir[1], this.lattice, this.type);
+  constructor([n, m], [dirIn, dirOut], [rootN, rootM]){
+    super([n, m], [dirIn, dirOut]);
+    this.isJammed = false;
+    this.inletOK = true;
+    this.type='counterpart';
+    this.root = [rootN, rootM]
+    this.settingImg ();
+    this.inselfLattice=[n, m]
+  }
+  settingImg(){};
+  movingElem(){
+    if (this.queue.length && !(this.isJammed)){
+          for (let i=0;i<this.queue.length; i++){
+            this.notifySubscribers('CounterpartElem', this.queue.pop(), this.root , this.inselfLattice );
+          }
       }
-      if (source == 'IsRootJamed' && (this.inselfLattice.toString()==others[0].toString())){
-        // others: [slave lattice itself [n, m], loot.queueCounterJam, loot.queueJam]
-        this.isJammed = (others[1] && others[2]);
-      }
-    
-    
+      else {this.notifySubscribers('CounterpartElem', 0, this.root , this.inselfLattice );}
+  }
+  update(source, ...others){
+    if (source == 'ElemReady'){
+      // others: []
+      this.notifySubscribers('CheckNext', this.nextLattice, this.dir[1], this.lattice, this.type);
     }
-
+    if (source == 'IsRootJamed' && (this.inselfLattice.toString()==others[0].toString())){
+      // others: [slave lattice itself [n, m], loot.queueCounterJam, loot.queueJam]
+      this.isJammed = (others[1] && others[2]);
+    }
+  }
 }
 
 class Dualbuilding extends Building {
@@ -52,7 +46,6 @@ class Dualbuilding extends Building {
       this.type='Dualbuilding';
       this.IMGURL = '../elem/buildings/cutter.png';
       this.settingImg ();
-
       this.queueJam = false;
       this.queueCounterJam = false;
     }
@@ -72,7 +65,6 @@ class Dualbuilding extends Building {
               que[i].move();
             }
           }
-          //console.log(que)
           if((que[que.length-1])) {que[que.length-1].move()};
         }
       }
@@ -80,29 +72,27 @@ class Dualbuilding extends Building {
       queueMove(this.queueCounter)
     }
 
-
     draw(){
-        let X = this.tileWidth*this.lattice[0];
-        let Y = -this.tileWidth*this.lattice[1];
-        if (this.imageSet){
-          translate(X,Y);  
-          rotate(DIR_VEC[this.dir[0]]*180)
-          image(this.imageSet, this.tileWidth/2, 0, this.tileWidth*2, this.tileWidth);
-          rotate(-DIR_VEC[this.dir[0]]*180)
-          translate(-X,-Y);
+      let X = this.tileWidth*this.lattice[0];
+      let Y = -this.tileWidth*this.lattice[1];
+      if (this.imageSet){
+        translate(X,Y);  
+        rotate(DIR_VEC[this.dir[0]]*180)
+        image(this.imageSet, this.tileWidth/2, 0, this.tileWidth*2, this.tileWidth);
+        rotate(-DIR_VEC[this.dir[0]]*180)
+        translate(-X,-Y);
+      }
+      this.movingElem()
+      if (this.queueCounterJam && this.queueJam){
+        
+        this.isJammed=true}
+      else{ 
+        this.isJammed=false
+        if (this.twoOutOnly){
+          if(this.queueJam){this.queue.pop()}
+          if(this.queueCounterJam){this.queueCounter.pop()}
         }
-        this.movingElem()
-        if (this.queueCounterJam && this.queueJam){
-          
-          this.isJammed=true}
-        else{ 
-          this.isJammed=false
-          if (this.twoOutOnly){
-            if(this.queueJam){this.queue.pop()}
-            if(this.queueCounterJam){this.queueCounter.pop()}
-          }
-        }
-
+      }
     }
     newElemCounter(newElement){
       this.queueCounter.unshift(newElement);
@@ -111,7 +101,6 @@ class Dualbuilding extends Building {
       newElement.subscribe(this);
     }
     update(source, ...others){
-      
       if (source == 'ElemReady'){
         // others: []
         this.notifySubscribers('CheckNext', this.nextLattice, this.dir[1], this.lattice, this.type);
@@ -137,11 +126,9 @@ class Dualbuilding extends Building {
           }
           else{this.queueCounterJam = true;}
         }
-
       }
     }
   }
-
 class Cutter extends Dualbuilding {
   constructor([n, m], [dirIn, dirOut], [slaveN, slaveM]){
     super([n, m], [dirIn, dirOut], [slaveN, slaveM])
@@ -169,7 +156,6 @@ class Cutter extends Dualbuilding {
     newElement.sprite.remove()
     return [originSide, counterSide];
   }
-  
   newElem(newElement){
     let [originSide, counterSide] = this.splitElement(newElement)
       this.queue.unshift(originSide);
@@ -178,12 +164,10 @@ class Cutter extends Dualbuilding {
       originSide.subscribe(this);
   this.newElemCounter(counterSide);
   }
-
 }
 
 class Balancer extends Dualbuilding {
   constructor([n, m], [dirIn, dirOut], [slaveN, slaveM]){
-
     super([n, m], [dirIn, dirOut], [slaveN, slaveM])
     this.nextLattice_counter = [n+DIR_LATTICE[dirIn][1]+DIR_LATTICE[dirIn][0], 
                                 m-DIR_LATTICE[dirIn][0]+DIR_LATTICE[dirIn][1]]
@@ -194,7 +178,6 @@ class Balancer extends Dualbuilding {
     this.countermode=1;
   }
   newElem(newElement){
-    //console.log(this.queueJam, this.queueCounterJam);
     if(this.queueJam &&  !(this.queueCounterJam)){
       this.queueCounter.unshift(newElement);
       this.queueCounter[0].init(this.lattice, this.dir, this.tileWidth);
@@ -211,7 +194,6 @@ class Balancer extends Dualbuilding {
         this.queue[0].visibleChanger(false)
         this.originmode = 1;
       }
-      
       if ((this.queueCounterJam) && this.queueCounter.length){
         this.queue.unshift(this.queueCounter.pop());
       }
@@ -269,7 +251,6 @@ class Painter extends Dualbuilding {
       }
       this.color = 'u'
     }
-    
     newElement.sprite.remove();
     this.queue.unshift(originSide);
     this.queue[0].init(this.lattice, this.dir, this.tileWidth);
@@ -298,7 +279,6 @@ class Painter extends Dualbuilding {
     }
     this.movingElem()
     if (this.queueCounterJam && this.queueJam){
-      
       this.isJammed=true}
     else{ 
       this.isJammed=false
@@ -328,7 +308,6 @@ class Stacker extends Dualbuilding {
     function CanMerge(layers1, layers2){
       if (!(layers2)) return true;
       for (let i=0 ; i<4; i++){ 
-        //console.log(layers1[i], layers2[i])
         if(layers1[i]  && layers2[i]){
           let shape1 = layers1[i].shape;
           let shape2 = layers2[i].shape;
@@ -337,7 +316,6 @@ class Stacker extends Dualbuilding {
               return false;
               
       }}}}
-
       return true
     }
     function CanStack(layers1, layers2){
@@ -356,12 +334,10 @@ class Stacker extends Dualbuilding {
       //console.log('merging')
       for (let i=0 ; i<4; i++){ 
         if(newElement.layers[i] || this.toStack[i]){
-
           let shape = []
           let color = []
             if(newElement.layers[i]==0 || this.toStack[i]==0){
               let whole = ((newElement.layers[i])?(newElement.layers[i]):(this.toStack[i]))
-              //console.log(newElement.layers[i], this.toStack[i])
               if (whole){
                 shape = whole.shape;
                 color = whole.color;
@@ -379,10 +355,8 @@ class Stacker extends Dualbuilding {
                 shape.push(((newPart != '-')? newPart: couPart))
                 color.push(((newPart != '-')? newElement.layers[i].color[j]: this.toStack[i].color[j]))    
               }
-              
             }
           }
-          //console.log(shape, color)
           originSide.layers[i] = new Shape(shape, color)
         }
         this.toStack = [0, 0, 0, 0];
@@ -402,17 +376,13 @@ class Stacker extends Dualbuilding {
       }}
       this.toStack = [0, 0, 0, 0];
     }
-
     newElement.sprite.remove();
     this.queue.unshift(originSide);
-    
     this.queue[0].init(this.lattice, this.dir, this.tileWidth);
     this.queue[0].visibleChanger(false)
-    //console.log(this.queue[0]);
     originSide.subscribe(this);
   }
   newElemCounter(newElement){
-    
     newElement.visibleChanger(false)
     newElement.sprite.remove();
     if(newElement.layers[0].shape[0]=='Col'){

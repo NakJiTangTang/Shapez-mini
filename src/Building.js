@@ -1,7 +1,6 @@
 import {MIN_DIST, REF_SPEED, ElEM_RADIUS_INT, DIR_VEC, DIR_LATTICE} from './Constants.js';
 
 import { Subject} from './Subject.js';
-
 import { Element} from './Element.js';
 import { Shape} from './Shape.js';
 
@@ -20,9 +19,7 @@ class Building extends Subject{
       this.isJamPropagated = false;
       this.dir =[dirIn, dirOut];
       this.workSpeed =  REF_SPEED;
-      this.tranparent = false;
       this.tileWidth = 0;
-
       let dirNext = DIR_LATTICE[this.dir[1]];
       this.nextLattice = [this.lattice[0]+dirNext[0], this.lattice[1]+dirNext[1]]
 
@@ -43,7 +40,7 @@ class Building extends Subject{
       this.loadImg(this.IMGURL).then((loadImg)=>{
         this.imageSet = loadImg
       }).catch((result)=>{
-        console.log(result) //
+        console.log(result)
       })
     }
     loadImg (imageURL){
@@ -80,7 +77,6 @@ class Building extends Subject{
     emitElem(){
       if (this.queue.length){
         this.queue[this.queue.length-1].emit()
-        
       }
     }
 
@@ -131,7 +127,6 @@ class Building extends Subject{
 
 class Belt extends Building {
   constructor([n, m], [dirIn, dirOut]){
-
     super([n, m], [dirIn, dirOut]);
     this.type = 'belt'
     //console.log(this.dirDelta());
@@ -139,13 +134,6 @@ class Belt extends Building {
     else if (this.dirDelta()==0.5) this.IMGURL = '../elem/buildings/belt_right.png'
     else if (this.dirDelta()==(-0.5)) this.IMGURL = '../elem/buildings/belt_left.png'
     this.settingImg ();
-    
-    // test element (delete!)
-    //let layer1 = new Shape(['S', 'S', 'S', 'S'], ['u','y','p','w'])
-    //this.queue.push(new Element([n, m], [layer1,0,0,0], this.dir));
-    //this.queue[0].subscribe (this)
-    //console.log(this.queue);
-
   }
   newElem(newElement){
     this.queue.unshift(newElement);

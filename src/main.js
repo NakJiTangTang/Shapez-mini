@@ -6,7 +6,6 @@ import { Belt} from './Building.js';
 import { Miner, Rotater} from './Etcbuilding.js';
 import {Counterpart, Cutter, Balancer, Painter, Stacker} from './Dualbuilding.js';
 
-
 // Globals
 let field;
 let noErase = 0;
@@ -37,14 +36,12 @@ function draw() {
   tutopromise.then((loadImg)=>{
     tuto_img = loadImg
   }).catch((result)=>{
-    console.log(result) //
+    console.log(result)
   })
 
   background('#eeeeee');
   field.draw();
-
   noStroke()
-
   fill(100)
   textSize(height/20 );
   textStyle(BOLD);
@@ -65,12 +62,10 @@ function draw() {
     let tutoH = tutoW*tuto_img.height/tuto_img.width;
     image(tuto_img, width-tutoW/2 , tutoH/2, tutoW, tutoH)
   }
-  
 }
 
 
 function getKeyByValue(obj, value) {return Object.keys(obj).find(key => obj[key] === value);}
-
 
 function mouseWheel(event) {field.magnify(event.deltaY);}
 
@@ -184,7 +179,6 @@ function mouseDragged(event) {
         }
         dirIn = dirOut;
         tempLattice=nowLattice;
-
       }
     }
   }
@@ -194,7 +188,6 @@ function mouseDragged(event) {
     tempLattice=nowLattice;
   }
 }
-
 
 window.addEventListener('keyup', (event) => {
   const key = event.key
@@ -260,6 +253,5 @@ window.setup = setup;
 window.draw = draw;
 window.mousePressed = mousePressed;
 window.keyPressed = keyPressed;
-
 window.mouseWheel = mouseWheel;
 window.mouseDragged = mouseDragged;

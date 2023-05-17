@@ -1,4 +1,3 @@
-import {Shape} from './Shape.js'
 import {COLOR_PALET, FRAME_RATE, REF_SPEED, DIR_LATTICE, ElEM_RADIUS_INT, ElEM_RADIUS_RATIO} from './Constants.js'
 import { Subject} from './Subject.js';
 
@@ -15,7 +14,6 @@ class Element extends Subject{
         this.buildingDir = [dirIn, dirOut];
         this.safeSpriteVisible = true;
         this.visible = true;
-        //console.log([DIR_LATTICE[this.buildingDir[1]][0]-DIR_LATTICE[this.buildingDir[0]][0], DIR_LATTICE[this.buildingDir[1]][1]-DIR_LATTICE[this.buildingDir[0]][1]])
         this.sprite.draw = () => {
             this.positionSet();
             if(this.visible && this.safeSpriteVisible){
@@ -26,7 +24,6 @@ class Element extends Subject{
                 stroke(100);
                 fill(100);
                 ellipse(0, 0, R, R)
-                
                 for (let layer of this.layers){
                     if(layer){for (let i=0; i<4; i++){
                         fill(COLOR_PALET[layer.color[i]]);
@@ -62,7 +59,6 @@ class Element extends Subject{
                             layer.color[i] = '-';
                         }
                         rotate(-i*90);
-                        
                     }
                     R= R-dist;
                 }
@@ -73,13 +69,11 @@ class Element extends Subject{
                     textSize(this.tileWidth/4);
                     textStyle(BOLD);
                     textAlign(CENTER, CENTER);
-                    //console.log('adsfadsfds')
                     text(this.sprite.text, 0, +0 )
                 }
                 pop();
-                //console.log(this.movingPercent);
             }
-        };
+        }
     }
     positionSet(){
         let X, Y, dir, dirOut;
@@ -113,8 +107,6 @@ class Element extends Subject{
             this.safeSpriteVisible=false; 
         }
         this.sprite.pos ={x:putX, y:putY};
-
-        
     }
     
     visibleChanger(toVisible){this.visible = toVisible};
@@ -126,20 +118,13 @@ class Element extends Subject{
         this.tileWidth =tileWidth
         this.unsubscribeAll();
     }
-    emit = ()=>{
-        if (this.movingPercent ==100){
-            //console.log(this.movingPercent)
-            this.notifySubscribers('ElemReady');}
-    }
+    emit = ()=>{if (this.movingPercent ==100){this.notifySubscribers('ElemReady');}}
     move = () => {
-        //console.log(this.sprite.pos.y)
         if (!this.sprite){
             //this.sprite = new Sprite(0, 0, ElEM_RADIUS_INT, ElEM_RADIUS_INT, 'static');
-            
         }
         if (this.movingPercent<100){
             this.movingPercent += REF_SPEED/FRAME_RATE;
-            //console.log(this.sprite);
         }else{
             this.movingPercent =100;
         }
