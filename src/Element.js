@@ -38,7 +38,7 @@ class Element extends Subject{
                         } else if (layer.shape[i]=='R'){
                             rotate(-90);
                             rectMode(CORNER);
-                            square(0, 0, R*0.85);
+                            square(0, 0, R);
                             rotate(90);
                         } else if (layer.shape[i]=='W'){
                             beginShape();

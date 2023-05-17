@@ -22,7 +22,7 @@ class Miner extends Building {
       //let layer1 = new Shape(['S', 'S', 'S', 'S'], ['u','y','p','w'])
       //this.queue.push(new Element([n, m], [layer1,0,0,0], this.dir));
       //this.queue[0].subscribe (this)
-      console.log(this.queue);
+      //console.log(this.queue);
     }
     draw(){
         let X = this.tileWidth*this.lattice[0];

@@ -160,35 +160,38 @@ class Cutter extends Dualbuilding {
     originSide.visible=false;
     for (let i=0 ; i<4; i++){ 
       if(newElement.layers[i]){
-        counterSide.layers[i] = new Shape (['-', '-', newElement.layers[i].shape[2], newElement.layers[i].shape[3]],
+        originSide.layers[i] = new Shape (['-', '-', newElement.layers[i].shape[2], newElement.layers[i].shape[3]],
                                           ['-', '-', newElement.layers[i].color[2], newElement.layers[i].color[3]])
-        originSide.layers[i] = new Shape ([newElement.layers[i].shape[0], newElement.layers[i].shape[1], '-', '-'],
+        counterSide.layers[i] = new Shape ([newElement.layers[i].shape[0], newElement.layers[i].shape[1], '-', '-'],
                                           [newElement.layers[i].color[0], newElement.layers[i].color[1], '-', '-'])
       }
     }
     newElement.sprite.remove()
-    return [counterSide, originSide];
+    return [originSide, counterSide];
   }
   
   newElem(newElement){
     let [originSide, counterSide] = this.splitElement(newElement)
-    this.queue.unshift(originSide);
-    this.queue[0].init(this.lattice, this.dir, this.tileWidth);
-    this.queue[0].visibleChanger(false)
-    originSide.subscribe(this);
-    this.newElemCounter(counterSide);
+      this.queue.unshift(originSide);
+      this.queue[0].init(this.lattice, this.dir, this.tileWidth);
+      this.queue[0].visibleChanger(false)
+      originSide.subscribe(this);
+  this.newElemCounter(counterSide);
   }
 
 }
 
 class Balancer extends Dualbuilding {
   constructor([n, m], [dirIn, dirOut], [slaveN, slaveM]){
+
     super([n, m], [dirIn, dirOut], [slaveN, slaveM])
     this.nextLattice_counter = [n+DIR_LATTICE[dirIn][1]+DIR_LATTICE[dirIn][0], 
                                 m-DIR_LATTICE[dirIn][0]+DIR_LATTICE[dirIn][1]]
     this.type='balancer';
     this.IMGURL = '../elem/buildings/balancer.png';
     this.settingImg ();
+    this.originmode=1;
+    this.countermode=1;
   }
   newElem(newElement){
     //console.log(this.queueJam, this.queueCounterJam);
@@ -198,9 +201,17 @@ class Balancer extends Dualbuilding {
       this.queueCounter[0].visibleChanger(false)
     }
     else{
-      this.queue.unshift(newElement);
-      this.queue[0].init(this.lattice, this.dir, this.tileWidth);
-      this.queue[0].visibleChanger(false)
+      if (this.originmode && this.countermode && !(this.queueCounterJam)){
+        this.originmode = 0;
+        this.newElemCounter(newElement)
+        
+      }else{
+        this.queue.unshift(newElement);
+        this.queue[0].init(this.lattice, this.dir, this.tileWidth);
+        this.queue[0].visibleChanger(false)
+        this.originmode = 1;
+      }
+      
       if ((this.queueCounterJam) && this.queueCounter.length){
         this.queue.unshift(this.queueCounter.pop());
       }
@@ -214,9 +225,15 @@ class Balancer extends Dualbuilding {
       this.queue[0].visibleChanger(false)
     }
     else{
-      this.queueCounter.unshift(newElement);
-      this.queueCounter[0].init(this.lattice, this.dir, this.tileWidth);
-      this.queueCounter[0].visibleChanger(false)
+      if (this.countermode && this.originmode && !(this.queueJam)){
+        this.countermode = 0;
+        this.newElem(newElement)
+      }else{
+        this.queueCounter.unshift(newElement);
+        this.queueCounter[0].init(this.lattice, this.dir, this.tileWidth);
+        this.queueCounter[0].visibleChanger(false)
+        this.countermode = 1;
+      }
       if ((this.queueJam) && this.queue.length){
         this.queueCounter.unshift(this.queue.pop());
       }
@@ -336,7 +353,7 @@ class Stacker extends Dualbuilding {
 
     //Merge
     if (CanMerge(newElement.layers, this.toStack)){
-      console.log('merging')
+      //console.log('merging')
       for (let i=0 ; i<4; i++){ 
         if(newElement.layers[i] || this.toStack[i]){
 
@@ -371,7 +388,7 @@ class Stacker extends Dualbuilding {
         this.toStack = [0, 0, 0, 0];
       }
     }else if (CanStack (newElement.layers, this.toStack)){
-      console.log('stacking')
+      //console.log('stacking')
       let index =0;
       for (let i=0 ; i<4; i++){
         if(newElement.layers[i]){
