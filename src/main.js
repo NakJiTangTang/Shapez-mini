@@ -12,6 +12,7 @@ let field;
 let elemtest;
 let noErase = 1;
 let canEdit = 1;
+let isReverse = 0;
 const dirArray = ['up', 'right', 'down', 'left'];
 let dirInIndex = 0;
 let buildingtype = 1;
@@ -21,12 +22,15 @@ let buildingtype = 1;
 
 
 
+
 function setup() {
-  createCanvas(CANVAS_WIDTH,CANVAS_HEIGHT);
+  //createCanvas(CANVAS_WIDTH,CANVAS_HEIGHT);
+  createCanvas(windowWidth, windowHeight);
   frameRate(FRAME_RATE);
   field = new Field();
   imageMode(CENTER);
 }
+
 
 function draw() {
   background('#eeeeee');
@@ -228,6 +232,10 @@ function keyPressed() {
   if (key === 'e' || key === 'E') {
     console.log("editability changed")
     noErase = !noErase;
+  }
+  if (key === 't' || key === 'T') {
+    console.log("RL reversed")
+    isReverse = !isReverse;
   }
   if (key === 'r' || key === 'R') {
     console.log("rotate building CW");
