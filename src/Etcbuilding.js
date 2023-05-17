@@ -1,7 +1,7 @@
 import {Building} from './Building.js'
 import {Element} from './Element.js'
 import { Shape} from './Shape.js';
-import {MIN_DIST, REF_SPEED, ElEM_RADIUS_INT, DIR_VEC, DIR_LATTICE} from './Constants.js';
+import {DIR_VEC} from './Constants.js';
 import Levels from './Level.json'
 
 
@@ -106,13 +106,11 @@ class Hub extends Building{
         console.log(this.level);
 
         ((Levels.length-1)>this.level)?(this.level+=1):(this.level=0)
-        
-        this.levelLayer.sprite.text ="Clear!!"
         console.log(this.level);
         this.changeLevelLayer(this.level);
         this.storage = {};
-      }
-      this.levelLayer.sprite.text = `${count} / ${this.levelAmount}`
+      }    
+      this.levelLayer.sprite.text = `Level ${this.level}\n\n${count} / ${this.levelAmount}`
     }
 
   changeLevelLayer(level){

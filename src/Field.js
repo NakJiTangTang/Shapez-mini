@@ -1,6 +1,6 @@
-import {MIN_DIST, CANVAS_WIDTH,CANVAS_HEIGHT, FIELD_HEIGHT, FIELD_WIDTH, ElEM_RADIUS_INT} from './Constants.js';
+import {MIN_DIST, FIELD_HEIGHT, FIELD_WIDTH} from './Constants.js';
 import { Subject } from './Subject.js';
-import {Building, Ore} from './Building.js'
+import {Ore} from './Building.js'
 import {Hub, HubInlet} from './Etcbuilding.js'
 import list from './OreList.json'
 
@@ -10,9 +10,9 @@ class Field extends Subject{
         this.fieldH = FIELD_HEIGHT;
         this.fieldW = FIELD_WIDTH;
         this.buildings = new Array(this.fieldH*this.fieldW);
-        this.viewNum = 10;
-        this.viewX=CANVAS_WIDTH/2;
-        this.viewY=CANVAS_HEIGHT/2; 
+        this.viewNum = 15;
+        this.viewX=width/2;
+        this.viewY=height/2; 
         this.Orelist = new Array(this.fieldH*this.fieldW);
         this.Ores = new Array(this.fieldH*this.fieldW);
         this.loadOreList();
@@ -46,7 +46,7 @@ class Field extends Subject{
     initOreList(){this.Orelist = new Array(this.fieldH*this.fieldW);}
     
     tileWidthIs(){
-        return CANVAS_WIDTH / this.viewNum;
+        return width / this.viewNum;
     }
     draw(){
         const tileWidth = this.tileWidthIs()

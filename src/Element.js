@@ -70,11 +70,11 @@ class Element extends Subject{
                 if(this.sprite.text){
                     noStroke()
                     fill(100)
-                    textSize(this.tileWidth/5);
+                    textSize(this.tileWidth/4);
                     textStyle(BOLD);
                     textAlign(CENTER, CENTER);
                     //console.log('adsfadsfds')
-                    text(this.sprite.text, 0, +this.tileWidth*2/5 )
+                    text(this.sprite.text, 0, +0 )
                 }
                 pop();
                 //console.log(this.movingPercent);
