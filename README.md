@@ -179,7 +179,7 @@ movingElem(){
 }
 ```
 
-1. Global [parameter](./src/Constants.js) 
+3. Global [parameter](./src/Constants.js) 
 One can manage constants such as size of elements  and overall speed in one place. Also, one can manage the [Ore](./src/OreList.json) of the field and  [levels](./src/Level.json) respectively.
 
 ### Bugs
