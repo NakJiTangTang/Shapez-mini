@@ -6,7 +6,7 @@ import { Shape} from './Shape.js';
 
 
 class Building extends Subject{
-    constructor([n, m], [dirIn, dirOut], isInv){
+    constructor([n, m], [dirIn, dirOut]){
       super();  
       this.type = ''
       this.queue = [];
@@ -16,7 +16,6 @@ class Building extends Subject{
       this.IMGURL = ""
       this.lattice = [n, m];
       this.isJammed = false;
-      this.isJamPropagated = false;
       this.dir =[dirIn, dirOut];
       this.workSpeed =  REF_SPEED;
       this.tileWidth = 0;

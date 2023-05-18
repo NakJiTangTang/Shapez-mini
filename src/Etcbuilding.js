@@ -64,14 +64,10 @@ class Hub extends Building{
           }else {layersStr.push(0)};
         }
         let data = layersStr.toString();
-        if (this.storage[data]){
-          this.storage[data]+=1;
-        } else{
-          this.storage[data] = 1
-        }
+        if (this.storage[data]){this.storage[data]+=1;} 
+        else{this.storage[data] = 1}
         this.queue.shift();
-      }
-      console.log(this.storage);
+      }console.log(this.storage);
     }
     this.levelWorking();
   }

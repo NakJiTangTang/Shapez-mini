@@ -77,15 +77,6 @@ class Field extends Subject{
         }
         translate(-this.viewX, -this.viewY);
     }
-    //Under consideration to implement
-    drawPeek(tileWidth){
-        this.peekBuilding.lattice = this.clickedLattice(mouseX, mouseY);
-        if(this.peekBuilding.lattice){
-            tint(255,100);
-            this.peekBuilding.draw(tileWidth, this.viewX, this.viewY);
-            tint(255,255);
-        }
-    }
     drawGrid(tileWidth){
         strokeWeight(tileWidth/100);
         stroke(170);

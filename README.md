@@ -1,162 +1,196 @@
-**Name: Lee Nak Hyeong** 
 
-**Student ID: 20200437**
+**Shapez mini**
 
-**Repository URL: [Here](https://github.com/NakJiTangTang/Shapez-mini)**
+Name: Lee Nak Hyeong
+
+Student ID: 20200437
+
+Email: nhl0113@kaist.ac.kr
+
+Demo video: [link](https://youtu.be/EEtSwftlagE)
+
+Repository URL: [link](https://github.com/NakJiTangTang/Shapez-mini)
 
  
  
 ## Table of Contents
 
-- [What is the Shapez.io](#what-is-the-shapezio)
-  - [Game goal](#game-goal)
-  - [Core mechanics](#core-mechanics)
-    - [Building blocks](#building-blocks)
-    - [Extraction](#extraction)
-    - [Modification](#modification)
-    - [Upgrade](#upgrade)
-  - [How to implement](#how-to-implement)
-    - [Scope](#scope)
-    - [Basic Idea](#basic-idea)
-  - [Expecting challange](#expecting-challange)
+- [Table of Contents](#table-of-contents)
+- [Description](#description)
+- [Game goal](#game-goal)
+- [Core mechanics](#core-mechanics)
+  - [Coordinate system](#coordinate-system)
+  - [Building blocks](#building-blocks)
+  - [Basic buildings](#basic-buildings)
+  - [Modification buildings](#modification-buildings)
+  - [Balancer](#balancer)
+  - [Example](#example)
+- [Organization of project](#organization-of-project)
+  - [Basic structure](#basic-structure)
+- [Highlight](#highlight)
+  - [Implementing methods (Hard parts)](#implementing-methods-hard-parts)
+  - [Bugs](#bugs)
+- [References](#references)
 
 
 
-# What is the Shapez.io
+## Description
 
 ![main](./sources/Main.png)
 
-Construction management simulation io game released on May 21, 2020. As its name suggests, Shapez is a game that consists of a factory that extracts shapes and pigments, cuts and combines shapes, and colors them to produce various shapes.
+Shapez-mini is a project that implements the basic elements of the original game based on **node.js, p5.js and p5.play**.
 
-It is free for web games, which are generally a feature of well-known io games, also [open-sources](https://github.com/tobspr-games/shapez.io). Actually web version is only available for a trial version, and the full version is sold for 13,000 won on [Steam](https://store.steampowered.com/app/1318690/shapez/).
+Original game: Shapez is construction management simulation io game released on May 21, 2020. As its name suggests, Shapez is a game that consists of a factory that extracts shapes, cuts and combines shapes, and colors them to produce various shapes. It is [open-sources](https://github.com/tobspr-games/shapez.io) games. 
 
 
 ## Game goal
 
-![structure](./sources/game_structure.webp)
+![structure](./sources/game_structure.jpg)
 
-The main objective of shapez.io is to design and build factories to produce various shapes. The game starts with a basic set of tools, and players must gather materials(shape & dye), construct  production lines(cut, rotate, merge, stack, color), and create production lines to manufacture different items.
+The main objective is to **design and build factories to produce specific Shape**. The game starts with a field of Ores and the Hub, and players must gather materials(from mining ore), construct  production lines(cut, rotate, merge, stack, paint), and create production lines to manufacture different items.
 
 There is no strict win and lose in this game. As players progress through the game, they encounter more complex shapes to make, which require more advanced and efficient production processes. 
 
-But what the player should consider is optimization, since each level need a huge amount of target shapes. The ultimate goal is to create a highly optimized and automated factory that can produce all the required items as efficiently as possible, to avoid long waiting.
+But what the player should consider is **optimization**, since each level need a amount of target shapes. To avoid boring long waiting, the ultimate goal is to create a highly optimized and automated factory. And the sense of accomplishment that occurs when succeeing in this becomes the motivation of the game.
 
 ## Core mechanics
+
+### Coordinate system
+![Coordinate](./sources/Coordinate_discribe.jpg)
+   All building follows [n, m] lattice coordinate. [refX refY] of Player's viewpoint is equal to Origin of [x, y] coordinate. [n, m] lattice coordinate is represented in the form of index of buildings array by nmIntoIndex([n, m]).
+
 ### Building blocks
+![building](./elem/Tutorial.png)
 
-![building](http://git.prototyping.id/20200437/homework5/raw/branch/main/sources/elements-01.jpg)
-![ores](http://git.prototyping.id/20200437/homework5/raw/branch/main/sources/elements-02.jpg)
-
-The game basically consists of elements of shapes/dyes and building that transports/processes them. Each element on the belt can move only when there is _no traffic jam_.
+The operation of the game is carried out through the **mouse and keyboard**. Player can install and delete buildings in the field with mouse, and the keyboard allows them to select the building or status (Drag/Rotate/Erase). For example, while pressing space bar, player can discover field by dragging.
 
 
-### Extraction
-![Extract](http://git.prototyping.id/20200437/homework5/raw/branch/main/sources/play-03.jpg)
-By placing _Extractor_ on the ore tile, each ore elements pop out. Player can connect the extractor and hub using belts, through simpy dragging along the path. 
-Each ore tile can consist of basic shape (4 part of the shape is all the same), dye or mixed shape. Since each tile are spread throughout all field randomly, 
+The game basically consists of elements of **Shapes**/dyes and building that transports/processes them. **The basic operating element of the game is each building**. The building attempts to manipulate the shape it received and hand it over to the next building. If the building in the direction is already jam, it's become jammed for itself.
+For example, each Shape on the belt can move only when there is _no traffic jam_.
 
-### Modification
-![Modification](http://git.prototyping.id/20200437/homework5/raw/branch/main/sources/play-04.jpg)
-To make wanted shape, player should build their own production line. Each element can be modified by placing on the conveyor belt or connecting building, as there are buildings that perform one function each. When the player goes over the stage, a building with better functionality will be available.
 
-- For each elements: Cut in half/quad, Rotate, Paint color
-- For two elements: (Merge, Stack), Color mix
-- Conviniences: Merge/Split conveyer belt, Wormhole, Storage, Speed checker
-### Upgrade
-![Upgrade](http://git.prototyping.id/20200437/homework5/raw/branch/main/sources/Upgrades.png)
-The upgrade requires existing shapes, not the target shape of the stage. The upgrade does not add new features, but increases the speed & effieicncy of each feature. Therefore, players need to produce more diverse shapes at once, not just to clear the stage, but to create more efficient production line.
 
-## How to implement
 
-### Scope
-Since I mentioned before, it is [open-sources.](https://github.com/tobspr-games/shapez.io) But in this project, I would like to aim to implement part of the game based on p5.js without referring to this. The reason is that first, the project should be completed within three weeks, and more importantly, I thought it was possible to implement many parts with what I learned in class.
+### Basic buildings
+![Extract](./sources/basic.png)
 
-Now my idea is to implement the building up to the third section of this [list](#building-blocks). And I'm thinking about simplifying the stage system and changing only the shape of the target.
-In fact, there are additional buildings, such as logical circuit buildings, for highly skilled users, but this part will be omitted. (It makes game too loose, deep depth)
+The **Belt** literally moves the shape visually in the next direction. It can be arranged using two methods: drag along path and click (same as others).
 
-### Basic Idea
+The one in the middle of the start screen is **Hub**. Hub is the final destination for all shapes, indicating the current level and the shape and number required. Once the task is completed, it will move on to the next stage.
 
-As far as I'm concerned, choosing OOP is the best intuitive way. By default, each figure can have a total of 4 layers, and each layer gathers 4 different shapes and colors. So I'm thinking about objectifying each element on the belt like in the game, moving it on the belt, and transforming it accordingly when they meet a building.
+The fields are strewn with ores. By placing **Miner** on the ore tile, each Shape same as ore pop out. Player can connect the Miner and Hub using belts, through simpy dragging along the path. This completes the simplest interaction to clear the level by the above three buildings.
 
+### Modification buildings
+To make wanted shape, player should build their own production line by combining various buildings.
+![Modify](./sources/Modification.png)
+
+
+- For one elements: Cut in half/quad, Rotate, Paint
+- For two elements: Merge, Stack
+
+
+The **Rotator** exports the received shape by turning it 90 degrees to the right.
+**Cutter** splits the received shape left and right to create two new shapes. Connecting just one of the two output terminals will not stopping, but both output terminals stop when Jam occurs in both.
+
+The **Painter** receives the Dye element, saves it, and colors when the Shape element comes in. Therefore, if the production of the shape element is higher than the speed at which the dye element is produced, there may be uncolored/no-color-changed blocks.
+
+One of the most important buildings is the **Stacker**, which plays the **role of stacking and merging** according to the two incoming elements. By default, place the shape on the right over the shape on the left. However, if it is possible to paste all the same-height layers of both shapes into one layer (no overlapping parts), then combine the same-height layers. Since changes due to Stack are irreversible, so the player needs to consider.
+
+### Balancer
+
+![Balancer](./sources/balancer.png)
+
+Unlike other buildings, **Balancer** does not change the Shape. Instead, **it adjust the flow of the shape in two modes**. If there is one input and then two rails, the output is distributed alternately between the two rails. If there are two inputs and one output rail, all input Shapes will be placed on that rail. In the case of the former, it is used when one shape has to be used in many places, or when it is hard to manufacture in many places because it is a complex shape. In the latter case, it is for the cases when need to make various shapes on one rail, or simply speed up production.
+
+### Example
+![Stage](./sources/Stage.png)
+As the stage changes, the Shape required becomes increasingly complex.
+
+![Complex](./sources/complex.png)
+As shown in the picture above, by installing seven kinds of buildings, player can create the shape that the hub needs.
+
+
+
+
+## Organization of project
+
+### Basic structure
+![UML](./sources/UML-Main.png)
+
+The overall structure is divided into **Field, Building, and Element (Shape)**. Element represents each shape with a total of four layers & color on it. Building is responsible for modifying and exporting elements. Field is the space where Building can be built, and the element is propagated through communication between Field objects and Building objects.
+
+Field have **buildings**, the array of building
+Each building have a **queue** as a property inside. 
+The queue contains objects of element class.
+
+The Building has a **one-tile** regular building and a two-tile **Dualbuilding**. In fact, Dualbuilding does not really occupy two spaces, but consists of Origin building and Counterpart. This Counterpart may or may not receive input depending on the setting. If it receive the input, store the element in the **queueCounter** of Origin building. In Dualbuilding, the output is in charge of whatever number it is in Origin building.
+
+
+![CentralDogma](./sources/Dogma.png)
+
+Basically, the element movement is all based on OOP. Classes were created using 'extends Subject', and communicate with each other through notifySubscriber and update. Element class have a **"movingpercent"** as a property, and also a sprite object (p5.play).
+In every frame, every building inside the buildings increase the "movingpercent" of elements in queue.
+
+If the largest movingpercent become 100, each building alarm (by notifysubscriber) Field it(element)'s (desired direction, own lattice location, next lattice coordinate,Element).
+Then field check the next tile, and if it is empty or already jammed, alarm that building that **you're also jammed**. If building is jammed, no function processed. (building and field is simultaneously subscriber). Else, the element will be normally transferred to the next building.
+
+
+## Highlight
+
+### Implementing methods (Hard parts)
+1. safeSpriteVisibility in Element
+The sprite class provided by p5.js is definitely convenient, but there was a fatal drawback in this project. That's where it's going to be deleted if it's outside the area defined on the canvas.
+Therefore, to prevent this, unlike the original coordinates, **Sprite actually remains in the canvas**, but it was implemented in such a way that it was only set to be invisible and then visible again when it returned.
 ```Javascript
-
-const Field = []; //Including buldings
-const Elements = []; //Including each shape elements
-
-
-// Each layer
-class layer{
-  constructor(s1, s2, s3, s4, c1=0, c2=0, c3=0, c4=0) {
-    this.layer=[[s1, c1], [s2, c2], [s3, c3], [s4, c4]];
-  }
-  draw(x, y, size){}
-  rotate(){}
+let putX = X;
+let putY = Y;
+if (Y>-R && Y<height+R && X>-R && X<width+R ){
+    this.safeSpriteVisible=true;
 }
-
-class element{
-  constructor(x, y, lowest, low, high, highest) {
-    this.layers = [lowest, low, high, highest];
-    this._x = x;
-    this._y = y;
-    this.show = true;
-    }
-  drawElement(){
-    for (let i =0; i<4 ; i++){
-        this.layers[i].draw(_x, _y, 100-i*10);
-    }
-  }
-  isJammed(){}
-  move(){}
-  rotate(){}
-  isEnterBuilding(){
-    // not jammed, element is on the entrace of building
-  }
-  getWhatBuilding(){... return buildingObject}
-  elementReact(){
-    if (isEnterBuildiing) {
-        getWhatBuilding.enter(this.layers);
-        this.show = false;
-    }
-  }
-
-// Each building: on the tile, so let (i, j)
-class exampleBuilding{
-    constructor(i, j, direction) {
-        this._i = i;
-        this._j = j;
-        this._dir=direction; //up down left right: u, d, l, r
-        this.speed = SpeedList.exampleBuilding;
-        this.queue =[];
-    }
-    draw(){}
-    enter(layers){
-        let countDown = this.speed;
-        this.queue.push([layers, countDown]);
-    }
-    act(){// characteristic action
-    }
-    common(){
-        // Every time each countDown of layers will -1 (@ each refreshing). when =0, it will reacts
-    }
+else{
+    if(Y<=-R || Y>=height+R){putY= (Y<=0) ? -R : height+R;}
+    if(X<=-R || X>=width+R ){putX= (X<=0) ? -R : width+R ;}
+    this.safeSpriteVisible=false; 
 }
-
-  setup(){... frameRate(30)}
-  draw(){... 
-  //each building -> do common
-  //each shape -> elementReact
-  //each shape -> if this.show=false -> deleted
-  
-  }
-}
-
+this.sprite.pos ={x:putX, y:putY};
 ```
 
+2. Element into String
+In the case of Hub, it had to compare the elements that came in with each other and store the numbers. The problem was how to dataize an element, and I overcame it by using toString to create a unique string for each shape.
+Therefore, I tried to make it easy and intuitive by creating a key-value pair in which the **characteristic string is key** and the quantity is value in the 'storage' object.
+```Javascript
+movingElem(){
+  if (this.queue.length){
+    for (let element of this.queue){
+      let layers = [...element.layers];
+      let layersStr = [];
+      for (let layer of layers){
+        if(layer){
+          layersStr.push([...layer.color, ...layer.shape].toString()) 
+        }else {layersStr.push(0)};
+      }
+      let data = layersStr.toString();
+      if (this.storage[data]){this.storage[data]+=1;} 
+      else{this.storage[data] = 1}
+      this.queue.shift();
+    }console.log(this.storage);
+  }
+  this.levelWorking();
+}
+```
 
-## Expecting challange
+1. Global [parameter](./src/Constants.js) 
+One can manage constants such as size of elements  and overall speed in one place. Also, one can manage the [Ore](./src/OreList.json) of the field and  [levels](./src/Level.json) respectively.
 
-1. Number of Objects: Hundreds of objects will be contained on a single screen if it goes this way. Therefore, I wonder if the browser can withstand this much. If there is a problem such as lagging, all mechanisms must be changed to solve it.
-   
-    ![Upgrade](http://git.prototyping.id/20200437/homework5/raw/branch/main/sources/Coordinate.png)
+### Bugs
+1. Sprite blink when using Cutter 
+When the output goes toward the counterpart of the cutter, the position of the sprite blinking. It doesn't affect gameplay, but it can be eye-watering. It is presumed that it happened because the code was twisted on the side of the element.
+2. (Very rare) The Shape of the Hub is gone
+If player drag the screen around in a zoomed-in situation, there are times when the shape of the Hub disappears. At this time, there is no way to fix it except for refresh. 
 
-2. Field Coordinate Calculation: I want to create a coordinate with the center of the field as (0, 0), but it is impossible to apply negative coordinates in the actual array. Therefore, I'm first considering creating a general array and placing each element in a spiral shape. But I'm not sure this is a widely known way. Of course, the movement of each shape element consists of simple x and y, but a large amount of coordinate transformation is expected to proceed in each building and ore placement, and the task load is likely to increase.
-3. Time management problem: since it's my first time working on a project in this format, I can't guess if it's possible to do the full amount planned. Therefore, I'm thinking of make only the basic structure first and then adding elements.
+## References
+- [p5.js](https://p5js.org/ko/reference/)
+- [p5.play](https://p5play.org/learn/)
+- [window.keydown](https://velog.io/@eunjin/Javascriptwindow.addEventListener-keypress-keydown-%EB%AC%B4%EC%8A%A8-%EC%B0%A8%EC%9D%B4%EC%9D%B8%EA%B0%80%EC%9A%94)
+
+

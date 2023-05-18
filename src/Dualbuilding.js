@@ -160,10 +160,10 @@ class Cutter extends Dualbuilding {
     let [originSide, counterSide] = this.splitElement(newElement)
       this.queue.unshift(originSide);
       this.queue[0].init(this.lattice, this.dir, this.tileWidth);
-      this.queue[0].visibleChanger(false)
+      //this.queue[0].visibleChanger(false)
       originSide.subscribe(this);
-  this.newElemCounter(counterSide);
-  }
+    this.newElemCounter(counterSide);
+  } 
 }
 
 class Balancer extends Dualbuilding {
